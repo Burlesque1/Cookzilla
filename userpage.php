@@ -36,7 +36,7 @@
   <body data-spy="scroll" data-target="#navbar" data-offset="150">
       
         <nav class="navbar navbar-light bg-faded navbar-fixed-top" id="navbar">
-          <a class="navbar-brand" href="#">Cookzilla</a>
+          <a class="navbar-brand" href="login.html">Cookzilla</a>
           <ul class="nav navbar-nav">
             <li class="nav-item">
               <a class="nav-link" href="#jumbotron">Home <span class="sr-only">(current)</span></a>
@@ -58,6 +58,7 @@
 				  <input type="text" class="search-query" placeholder="Search">
 				  <button type="submit" class="btn btn-primary">Search</button>
 				</form>
+				
 			</li>
 			<?php 
 				// add dropdown to log out
@@ -76,23 +77,27 @@
 		<div class="container">
       
 			<div class="row" id="Search">
-          
-				<form action="#" class="navbar-search">
-				  <input type="text" class="search-query" name="keyword" placeholder="recipes, group, event...">
-				  <input type="text" class="search-query" placeholder="dropdown menu">
-					<button type="submit" class="btn btn-primary">Search</button>
-				  <a href="">Adavanced search</a>
-				  <? $_SESSION["sign"]==false;
-				  ?>
-				</form>
-          
+				<form action="searchresult.php" method="get" class="navbar-search">
+				  
+				  <input type="text" id="Search" name="keyword" class="search-query" placeholder="Search for...">		
+				  <select name="searchtype" id="Search">
+					  <option value ="Recipe">Recipe</option>
+					  <option value ="Group">Group</option>
+					  <option value="Event">Event</option>
+					  <option value="???">User</option>
+				</select><button type="submit" class="btn btn-info">Search</button>
+            </form>	
 			</div>
-          
       </div>
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+   
 	</body>
 </html>
 
 <?php
+	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
 	function do_query($link_,$query_){
 		if ($result = mysqli_query($link_, $query_)) {
 	
@@ -103,16 +108,15 @@
 			} else {
 
 				echo "<br>No result found.";
+				return NULL;
 			}
 
 		} else{
 			
 			echo "query is not successful!";
+			return NULL;
 		}
 	}
-	// ?????????????????????????????????????????????
-$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla");
-	
 	if(isset($_SESSION["sign"]) && $_SESSION["sign"]){ // show login page
 		echo "<h2><big><b><a href=''>Profile</a>	<a href=''>Recipes</a>	<a href=''>Groups</a>	<a href=''>Events</a></b></big></h2>";
 	
@@ -144,8 +148,6 @@ $_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla");
 		// do_query($_SESSION["link"], $query);// echo "<br>Event</br>";
 		
 		echo "</table>"; 
-	} else {	// show search result
-		
 	}
 	
 ?>
