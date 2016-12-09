@@ -100,14 +100,23 @@
               <a class="nav-link" href="#footer">about</a>
             </li>
           </ul>
-          <form action="logincheck.php" method="post" class="form-inline pull-xs-right">
-            <input class="form-control" type="email" name="email" placeholder="Email">
-              <input class="form-control" type="password" name="password" placeholder="Password">
-            <button class="btn btn-success" type="submit">Login</button>
-			
-			<!-- alternative: check input then forward -->
-			
-          </form>
+		  <?php 
+				// add dropdown to log out
+				session_start();
+				if(isset($_SESSION["email"])){
+					echo '<a class="nav-link pull-right" href="logout.php">				
+						  log out </a>
+						  <a class="nav-link pull-right" href="userpage.php">				
+						 <span>Hello, '.$_SESSION["username"].'!</span></a>';
+				} else {
+					echo '<form action="logincheck.php" method="post" class="form-inline pull-xs-right">
+						<input class="form-control" type="email" required="required" name="email" placeholder="Email">
+						  <input class="form-control" type="password" required="required" name="password" placeholder="Password">
+						<button class="btn btn-success" type="submit">Login</button>
+						<!-- alternative: check input then forward --></form>';
+				}
+			?>
+          
         </nav>
 
         <div class="jumbotron" id="jumbotron">
