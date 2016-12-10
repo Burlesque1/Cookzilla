@@ -103,11 +103,18 @@
 		  <?php 
 				// add dropdown to log out
 				session_start();
-				if(isset($_SESSION["email"])){
-					echo '<a class="nav-link pull-right" href="logout.php">				
+				if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+					if(isset($_SESSION["username"])){
+						echo '<a class="nav-link pull-right" href="logout.php">				
 						  log out </a>
 						  <a class="nav-link pull-right" href="userpage.php">				
 						 <span>Hello, '.$_SESSION["username"].'!</span></a>';
+					} else {
+						echo '<a class="nav-link pull-right" href="logout.php">				
+						  log out </a>
+						  <a class="nav-link pull-right" href="userpage.php">				
+						 <span>Hello, '.$_SESSION["email"].'!</span></a>';
+					}
 				} else {
 					echo '<form action="logincheck.php" method="post" class="form-inline pull-xs-right">
 						<input class="form-control" type="email" required="required" name="email" placeholder="Email">

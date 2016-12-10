@@ -1,5 +1,5 @@
 <?php
-	include 'userpage.php';
+	include 'function.php';
 	print_r($_GET);
 	if($_GET["searchtype"] == "Recipe"){
 		$q = "SELECT rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like '%".$_GET['keyword']."%'";
@@ -12,7 +12,7 @@
 					<td>
 						<form action="recipe.php" method="post">
 							<input type="hidden" name="rid" value="'.$row["rid"].'">
-							<button type="submit">
+							<button type="submit" >
 								<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="100px">
 							</button>
 						</form>
@@ -39,7 +39,7 @@
 			
 			echo "<tr><td><form name='form1' action='group.php' method='post'>
 				<input type='hidden' name='gid' value='".$row["gid"]."'> 
-				  <button type='submit'>link</button>
+				  <button type='submit' class='btn btn-info'>link</button>
 				</form></td>";
 				
 			for ($x = 0; $x <count($row)/2; $x++) {
@@ -61,7 +61,7 @@
 			
 			echo "<tr><td><form name='form1' action='event.php' method='post'>
 				<input type='hidden' name='eid' value='".$row["eid"]."'> 
-				  <button type='submit'>link</button>
+				  <button type='submit' class='btn btn-info'>link</button>
 				</form></td>";
 			
 			for ($x = 0; $x <count($row)/2; $x++) {

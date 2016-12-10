@@ -13,6 +13,7 @@
 		if($num){  
 			$row = mysqli_fetch_array($result);
 			$_SESSION["username"]=$row["username"];
+			$_SESSION["check"]="successful";
 			Header("Location: userpage.php"); 
 			// echo "<meta http-equiv=refresh content='0; url=userpage.php '>";  
 		} else {  
