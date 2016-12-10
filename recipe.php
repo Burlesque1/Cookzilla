@@ -1,6 +1,6 @@
 <?php
-	include 'userpage.php';
-	$rid=$_POST["rid"];
+	include 'function.php';
+	$rid=$_GET["rid"];
 	$q="select pic from recipes where rid=".$rid;
 	$r=do_query($_SESSION["link"], $q);
 	$row = mysqli_fetch_array($r);
