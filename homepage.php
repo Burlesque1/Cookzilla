@@ -72,12 +72,16 @@
 									<?php 
 								// add dropdown to log out
 									session_start();
-									if(isset($_SESSION["email"])){
+									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
 										echo '<li class="dropdown"> 
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'.$_SESSION["username"].'<span class="caret"></span></a>
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Hello, '.$_SESSION["username"].'!</span><span class="caret"></span></a>
 										<ul class="dropdown-menu">
+										  <li><a href="userpage.php"><span>profile</span></a></li>
+										  <li>profile</li>
+										  <li>profile</li>
+										  <li>profile</li>
+										  <li>profile</li>
 										  <li><a href="logout.php">log out </a></li>
-										  <li><a href="userpage.php"><span>Hello, '.$_SESSION["username"].'!</span></a></li>
 									  </ul>
 								  </li>';
 							  } else {

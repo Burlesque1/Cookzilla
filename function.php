@@ -1,108 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-  <head>
-      
-    <meta charset="utf-8">
-      
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-      
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-    <style>
 	
-          #Search {
-              
-              text-align: center;
-              margin-top:150px;
-              margin-bottom: 50px;
-              
-          }
-		  
-          body {
-              margin-top:70px;
-              position: relative;
-              
-          }
-      
-    </style>
-      
-  </head>
-  
-  <body data-spy="scroll" data-target="#navbar" data-offset="150">
-      
-        <nav class="navbar navbar-light bg-faded navbar-fixed-top" id="navbar">
-          <a class="navbar-brand" href="login.php">Cookzilla</a>
-          <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#jumbotron">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#about">???</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#footer">???</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">???</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">about</a>
-            </li>
-			
-			<?php 
-				// add dropdown to log out
-				session_start();
-				if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
-					if(isset($_SESSION["username"])){
-						echo '<a class="nav-link pull-right" href="logout.php">				
-						  log out </a>
-						  <a class="nav-link pull-right" href="userpage.php">				
-						 <span>Hello, '.$_SESSION["username"].'!</span></a>';
-					} else {
-						echo '<a class="nav-link pull-right" href="logout.php">				
-						  log out </a>
-						  <a class="nav-link pull-right" href="userpage.php">				
-						 <span>Hello, '.$_SESSION["email"].'!</span></a>';
-					}
-				} else {
-					echo '<form action="logincheck.php" method="post" class="form-inline pull-xs-right">
-						<input class="form-control" type="email" required="required" name="email" placeholder="Email">
-						  <input class="form-control" type="password" required="required" name="password" placeholder="Password">
-						<button class="btn btn-success" type="submit">Login</button>
-						<!-- alternative: check input then forward --></form>';
-				}
-			?>
-          </ul>
-         
-        </nav>
+	<title>Cookzilla</title>
+  <head>
+	  
+	<meta charset="utf-8">
+	  
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	  
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	  
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	body {
+	  padding-bottom: 40px;
+	  color: #5a5a5a;
+	}
+
+
+	/* CUSTOMIZE THE NAVBAR
+	-------------------------------------------------- */
+
+	/* Special class on .container surrounding .navbar, used for positioning it into place. */
+	.navbar-wrapper {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  left: 0;
+	  z-index: 20;
+	}
+	/* Flip around the padding for proper display in narrow viewports */
+	.navbar-wrapper > .container {
+	  padding-right: 0;
+	  padding-left: 0;
+	}
+	.navbar-wrapper .navbar {
+	  padding-right: 15px;
+	  padding-left: 15px;
+	}
+	.navbar-wrapper .navbar .container {
+	  width: auto;
+	}
+	#Summary {
 		
-		<div class="container">
-      
-			<div class="row" id="Search">
-				<form action="searchresult.php" method="get" class="navbar-search">
-              <input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
-				<select name="searchtype" id="dropdown">
-                  <option value ="Recipe">Recipe</option>
-                  <option value="User">User</option>
-                  <option value ="Group">Group</option>
-                  <option value="Event">Event</option>
-                </select>
-              <button type="submit" class="btn btn-info">Search</button>
-            </form>	
+		text-align: center;
+		margin-top:50px;
+		margin-bottom: 50px;
+	}
+	#searchdropdown {
+		width:70px;
+		height:48px;
+		border-radius: 5px;
+	}
+	#search{
+		width:400px;
+		height:48px;
+		border-radius: 5px;
+	}
+	</style>
+    </head>
+  
+		<body>
+			<div class="navbar-wrapper">
+				<div class="container">
+					<nav class="navbar navbar-default navbar-fixed-top">
+						<!-- navbar-inverse: black navbar -->
+						<div class="container">
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+									<span class="sr-only">Toggle navigation</span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+								</button>
+								<a class="navbar-brand" href="homepage.php">Cookzilla</a>
+							</div>
+
+							<div id="navbar" class="navbar-collapse collapse">
+								<ul class="nav navbar-nav">
+									<li class="active"><a href="homepage.php">Home</a></li>
+									<li><a href="#">Recipe</a></li>
+									<li><a href="#">Group</a></li>
+									<li><a href="#">Event</a></li>
+									<li><a href="#about">About</a></li>
+								</ul>
+								<ul class="nav navbar-nav navbar-right">
+								<?php 
+								// add dropdown to log out
+									session_start();
+									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+										echo '<li class="dropdown"> 
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Hello, '.$_SESSION["username"].'!</span><span class="caret"></span></a>
+										<ul class="dropdown-menu">
+										  <li><a href="userpage.php"><span>profile</span></a></li>
+										  <li>profile</li>
+										  <li>profile</li>
+										  <li>profile</li>
+										  <li>profile</li>
+										  <li><a href="logout.php">log out </a></li>
+									  </ul>
+								  </li>';
+							  } else {
+								echo '<form action="logincheck.php" method="post" class="navbar-form">
+								<input class="form-control" type="email" required="required" name="email" placeholder="Email">
+								<input class="form-control" type="password" required="required" name="password" placeholder="Password">
+
+								<button class="btn btn-success" type="submit" role="button">Sign in<span class="glyphicon glyphicon-log-in"></span></button>
+								<!-- alternative: check input then forward -->
+
+								<a href="signup.php" class="btn btn-primary" role="button">sign up<span class="glyphicon glyphicon-user"></span></a>';
+							}
+							?>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
+		
+	<div class="container">
+
+				<div class="row" id="Summary">
+
+					<h1>Why Our Site Is Awesome</h1>
+					<p class="lead">good samples</p>
+
+					<form action="searchresult.php" method="get" class="navbar-search">
+						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
+						<select name="searchtype" id="searchdropdown">
+							<option value ="Recipe">Recipe</option>
+							<option value="User">User</option>
+							<option value ="Group">Group</option>
+							<option value="Event">Event</option>
+						</select>
+						<button type="submit" class="btn btn-info btn-lg">Search</button>
+					</form> 
+				</div>
 			</div>
-      </div>
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-   
-	</body>
-</html>
 
 <?php
 	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
