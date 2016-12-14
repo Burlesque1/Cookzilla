@@ -19,7 +19,7 @@
 				<label for="confirm_psw">Confirm Password:</label>
 				<input type="password" class="form-control" required="required" name="confirm_psw" placeholder="Confirm Password">
 			</div>
-			<!-- optional
+			
 			<div class="form-group">
 				<label for="username">Username:</label>
 				<input type="text" class="form-control" name="username" placeholder="Username">
@@ -40,7 +40,6 @@
 				<label for="text">Image(.jpeg, .png):</label>				 
 				<input type="file" name="image" placeholder=".jpeg, .png">
 			</div>
-			 -->
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 

@@ -44,7 +44,8 @@
 	}
 	
 	// report
-	$query_set[4]="SELECT reportid, title, content, writerid, pic1, pic2, pic3 from reporttoevent natural join report where eid=".$eid;
+	$query_set[4]="SELECT reportid, title, content, username, pic1, pic2, pic3 from reporttoevent natural join report 
+			join user on report.writerid=user.uid where eid=".$eid;
 	if($result=do_query($_SESSION["link"], $query_set[4])){
 		echo '<div class="container" style="width:900px;"><label>Event report:</label>
 			<table class="table table-hover"><thead><tr>
@@ -68,4 +69,32 @@
 		}
 		echo "</tbody></table></div>";
 	}
+	
+	if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+		
+		echo '<div class="container" style="width:900px;">
+			<form class="form-signup" action="update.php" method="post">
+			<div class="form-group">
+				<input type="hidden" class="form-control" name="searchtype" value="addreview">
+				<input type="hidden" class="form-control" name="rid" value="'.$rid.'">
+			</div>';
+		
+		echo '<div class="form-group">
+			<label for="text">review:</label>
+			<textarea type="review" class="form-control" rows="1" required="required" name="title" placeholder="write title..."></textarea>
+			<textarea type="review" class="form-control" rows="5" required="required" name="description" placeholder="write your review..."></textarea>
+			<textarea type="review" class="form-control" rows="2" required="required" name="suggestion" placeholder="write your suggestion..."></textarea>
+			</div>
+			<div class="form-group">
+				<select name="rating">
+					<option value=5>5</option>
+					<option value=4>4</option>
+					<option value=3>3</option>
+					<option value=2>2</option>
+					<option value=1>1</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+			</div></form>';
+		}
 ?>

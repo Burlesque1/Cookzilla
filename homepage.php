@@ -69,7 +69,7 @@
 									<li><a href="#about">About</a></li>
 								</ul>
 								<ul class="nav navbar-nav navbar-right">
-									<?php 
+								<?php 
 								// add dropdown to log out
 									session_start();
 									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
@@ -83,18 +83,17 @@
 										  <li>profile</li>
 										  <li><a href="logout.php">log out </a></li>
 									  </ul>
-								  </li>';
-							  } else {
-								echo '<form action="logincheck.php" method="post" class="navbar-form">
-								<input class="form-control" type="email" required="required" name="email" placeholder="Email">
-								<input class="form-control" type="password" required="required" name="password" placeholder="Password">
+									  </li>';
+									} else {
+										echo '<form action="logincheck.php" method="post" class="navbar-form">
+										<input class="form-control" type="email" required="required" name="email" placeholder="Email">
+										<input class="form-control" type="password" required="required" name="password" placeholder="Password">
 
-								<button class="btn btn-success" type="submit" role="button">Sign in<span class="glyphicon glyphicon-log-in"></span></button>
-								<!-- alternative: check input then forward -->
-
-								<a href="signup.php" class="btn btn-primary" role="button">sign up<span class="glyphicon glyphicon-user"></span></a>';
-							}
-							?>
+											<button class="btn btn-success" type="submit" role="button">Sign in<span class="glyphicon glyphicon-log-in"></span></button>
+										<a href="signup.php" class="btn btn-primary" role="button">sign up<span class="glyphicon glyphicon-user"></span></a>
+										</form> ';
+									}
+								?>
 						</ul>
 					</div>
 				</div>

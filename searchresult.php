@@ -1,8 +1,7 @@
 <?php
 	include 'function.php';
-	print_r($_GET);
 	if($_GET["searchtype"] == "Recipe"){
-		$q = "SELECT rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like '%".$_GET['keyword']."%'";
+		$q = "SELECT rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like '%".$_GET['keyword']."%' order by rid";
 		// print_r($q);
 		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>#</th><th>Title</th><th>Post date</th><th>Creator</th></tr></thead><tbody>';
 		$result=do_query($_SESSION["link"], $q);
@@ -31,9 +30,10 @@
 		echo "</tbody></table></div>";
 	}
 	if($_GET["searchtype"] == "Group"){
-		$q = "SELECT * from groups where gname like '%".$_GET['keyword']."%'";
+		$q = "SELECT gid, gname, gdescription, username  from groups join user on groups.creatorid=user.uid where gname like '%".$_GET['keyword']."%'";
 		// print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>uid</th><th>username</th><th>city</th><th>description</th></tr></thead><tbody>';
+		echo '<div class="container" style="width:900px;"><table class="table table-hover">
+			<thead><tr><th></th><th>gid</th><th>group name</th><th>description</th><th>creator</th></tr></thead><tbody>';
 		$result=do_query($_SESSION["link"], $q);
 		while($row = mysqli_fetch_array($result)){
 			
@@ -53,9 +53,11 @@
 		echo "</tbody></table></div>";
 	}
 	if($_GET["searchtype"] == "Event"){
-		$q = "SELECT *	from event where ename like '%".$_GET['keyword']."%'";
-		// print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>uid</th><th>username</th><th>city</th><th>description</th></tr></thead><tbody>';
+		$q = "SELECT eid, ename, edescription, edatetime, gname, username from 
+			groups natural join event join user on event.creator_id=user.uid where ename like '%".$_GET['keyword']."%'";
+		print_r($q);
+		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
+			<th></th><th>eid</th><th>event name</th><th>event description</th><th>schedule</th><th>group</th><th>creator</th></tr></thead><tbody>';
 		$result=do_query($_SESSION["link"], $q);
 		while($row = mysqli_fetch_array($result)){
 			

@@ -101,18 +101,17 @@
 										  <li>profile</li>
 										  <li><a href="logout.php">log out </a></li>
 									  </ul>
-								  </li>';
-							  } else {
-								echo '<form action="logincheck.php" method="post" class="navbar-form">
-								<input class="form-control" type="email" required="required" name="email" placeholder="Email">
-								<input class="form-control" type="password" required="required" name="password" placeholder="Password">
+									  </li>';
+									} else {
+										echo '<form action="#" method="post" class="navbar-form">
+										<input class="form-control" type="email" required="required" name="email" placeholder="Email">
+										<input class="form-control" type="password" required="required" name="password" placeholder="Password">
 
-								<button class="btn btn-success" type="submit" role="button">Sign in<span class="glyphicon glyphicon-log-in"></span></button>
-								<!-- alternative: check input then forward -->
-
-								<a href="signup.php" class="btn btn-primary" role="button">sign up<span class="glyphicon glyphicon-user"></span></a>';
-							}
-							?>
+											<button class="btn btn-success" type="submit" role="button">Sign in<span class="glyphicon glyphicon-log-in"></span></button>
+										<a href="signup.php" class="btn btn-primary" role="button">sign up<span class="glyphicon glyphicon-user"></span></a>
+										</form> ';
+									}
+								?>
 						</ul>
 					</div>
 				</div>
@@ -128,7 +127,7 @@
 					<p class="lead">good samples</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
-						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
+						<input type="text" id="search" name="keyword" required="required" class="search-query" placeholder="Search for...">
 						<select name="searchtype" id="searchdropdown">
 							<option value ="Recipe">Recipe</option>
 							<option value="User">User</option>
@@ -144,20 +143,20 @@
 	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
 	function do_query($link_,$query_){
 		if ($result = mysqli_query($link_, $query_)) {
-	
+			if($result==true)
+				return $result;
 			if (mysqli_num_rows($result) > 0) {
 				
 				return $result;
 				
 			} else {
 
-				echo "<br>No result found.";
+				// echo "<script>alert('no result found！');</script>";
 				return NULL;
 			}
 
 		} else{
-			
-			echo "query is not successful!";
+			// echo "<script>alert('query is not successful!');</script>";
 			return NULL;
 		}
 	}
