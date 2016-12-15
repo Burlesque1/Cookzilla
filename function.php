@@ -101,7 +101,7 @@
 									  </ul>
 									  </li>';
 									} else {
-										echo '<form action="#" method="post" class="navbar-form">
+										echo '<form action="logincheck.php" method="post" class="navbar-form">
 										<input class="form-control" type="email" required="required" name="email" placeholder="Email">
 										<input class="form-control" type="password" required="required" name="password" placeholder="Password">
 

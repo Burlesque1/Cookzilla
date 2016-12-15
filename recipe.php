@@ -49,20 +49,25 @@
 					// echo '<td><a class="btn btn-info" href="review.php?reviewid='.$row["reviewid"].'">detail</a></td>';
 				// }
 				for ($x = 0; $x <count($row)/2; $x++) {
-					if($i==6 && $x==count($row)/2-3)
+					if($i==6 && $x==count($row)/2-3) {
 						break;
-					echo "<td>".$row[$x]."</td>";
+					}
+					if(isset($row['tagname'])) {
+						echo '<td><a href="allrecipe.php?searchtype=tagtorecipe&tagname='.$row['tagname'].'">'.$row['tagname'].'</a></td>';
+					} else {
+						echo "<td>".$row[$x]."</td>";
+					}
 					
 				}
 				if($i==6){
-					echo '<td>a</td><td>a</td><td>a</td>';
+					echo '<td>';
 					// if($row["pic1"])
 						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic1"]).'></p></td>';
 					// if($row["pic2"])
 						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic2"]).'></p></td>';
-					// if($row["pic3"])
-						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic3"]).'></p></td>';
-					// print_r($row);
+					if($row["pic3"])
+						echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic3"]).'></p></td>';
+					echo '</td>';
 				}
 				echo "</tr>";
 			}

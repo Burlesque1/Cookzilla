@@ -51,11 +51,11 @@ function foo(){
 	include 'function.php';
 	echo'<div class="container" style="width:900px">
 		<ul class="nav nav-tabs">
-			<li class="active"><a data-toggle="tab" href="#Event">My Event</a></li>
+			<li class="active"><a data-toggle="tab" href="#rsvp">My RSVP</a></li>
+			<li><a data-toggle="tab" href="#Event">My Event</a></li>
 			<li><a data-toggle="tab" href="#Profile">My Profile</a></li>
 			<li><a data-toggle="tab" href="#Recipe">My Recipe</a></li>
 			<li><a data-toggle="tab" href="#Group">My Group</a></li>
-			<li><a data-toggle="tab" href="#rsvp">My RSVP</a></li>
 			<li><a data-toggle="tab" href="#comment">My Comment</a></li>
 			<li><a data-toggle="tab" href="#report">My Report</a></li>
 	    </ul>
@@ -201,7 +201,7 @@ function foo(){
 			if($result_s=do_query($_SESSION["link"], $query_s)){
 				echo "<td>";
 				while($row_s = mysqli_fetch_array($result_s)){
-					echo  "<span class='tag tag-pill tag-success'><p>".$row_s["tagname"]."</p></span>";
+					echo  "<span class='tag tag-pill tag-success'><p><a href='allrecipe.php?searchtype=tagtorecipe&tagname=".$row_s["tagname"]."'>".$row_s['tagname']."</a></p></span>";
 				}
 				echo "</td>";
 			} else {

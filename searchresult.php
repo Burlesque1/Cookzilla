@@ -1,111 +1,118 @@
 <?php
 	include 'function.php';
 	if($_GET["searchtype"] == "Recipe"){
-		$q = "SELECT rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like '%".$_GET['keyword']."%' order by rid";
-		// print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>#</th><th>Title</th><th>Post date</th><th>Creator</th></tr></thead><tbody>';
-		//insert into log
+		//insert into log;
+		$logvalue='search';
 		if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
-			$query="insert into log(uid, logtype, logvalue, logtime) 
-			values('".$_SESSION["uid"]."','search','".$_GET['keyword']."', now())";  
-			print_r($query);
-			if($result=do_query($_SESSION["link"], $query)){
-				echo "<script>alert('successful！');</script>";
+			if($stmt = $_SESSION["link"]->prepare("INSERT INTO log (uid, logtype, logvalue, logtime) VALUES (?, ?, ?, now())")) {
+			$stmt->bind_param("iss", $_SESSION["uid"], $logvalue, $_GET['keyword']);
+			$stmt->execute();
+			$stmt->close();
 			} else {
-				echo "<script>alert('fail！');</script>";
+		    	echo "Inserted into log table false";
 			}
 		}
 
-
-		$result=do_query($_SESSION["link"], $q);
-		while($row = mysqli_fetch_array($result)){
-			
-			echo '<tr>
+		if($stmt = $_SESSION["link"]->prepare("select rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like ? order by rid")) {
+			$keyword = '%'.$_GET['keyword'].'%';
+			$stmt->bind_param("s", $keyword);
+			$stmt->execute();
+			$stmt->bind_result($rid, $rtitle, $postdatetime, $username, $pic);
+			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>#</th><th>Title</th><th>Post date</th><th>Creator</th></tr></thead><tbody>';
+			while($stmt->fetch()) {
+				echo '<tr>
 					<td>
 						<form action="recipe.php" method="get">
-							<input type="hidden" name="rid" value="'.$row["rid"].'">
+							<input type="hidden" name="rid" value=$rid>
 							<button type="submit" >
-								<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="100px">
+								<img src="data:image/jpg;base64,'.base64_encode($pic).'" width="100px">
 							</button>
 						</form>
 					</td>';
-			
-			for ($x = 0; $x <count($row)/2-1; $x++) {
-				
-				echo "<td>".$row[$x]."</td>";
-				
+					echo "<td>".$rid."</td>";	
+					echo "<td>".$rtitle."</td>";
+					echo "<td>".$postdatetime."</td>";
+					echo "<td>".$username."</td>";
+				echo "</tr>";
 			}
-			
-			echo "</tr>";
-		}
-			
-		
-		echo "</tbody></table></div>";
+			$stmt->close();
+			echo "</tbody></table></div>";
+		} else {
+	    	echo "Select recipes from recipes table false";
+	    }
 	}
+
 	if($_GET["searchtype"] == "Group"){
-		$q = "SELECT gid, gname, gdescription, username  from groups join user on groups.creatorid=user.uid where gname like '%".$_GET['keyword']."%'";
-		// print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover">
-			<thead><tr><th></th><th>gid</th><th>group name</th><th>description</th><th>creator</th></tr></thead><tbody>';
-		$result=do_query($_SESSION["link"], $q);
-		while($row = mysqli_fetch_array($result)){
-			
-			echo "<tr><td><form name='form1' action='group.php' method='get'>
-				<input type='hidden' name='gid' value='".$row["gid"]."'> 
+		if($stmt = $_SESSION["link"]->prepare("SELECT gid, gname, gdescription, username  from groups join user on groups.creatorid=user.uid where gname like ?")) {
+			$keyword = '%'.$_GET['keyword'].'%';
+			$stmt->bind_param("s", $keyword);
+			$stmt->execute();
+			$stmt->bind_result($gid, $gname, $gdescription, $username);
+			echo '<div class="container" style="width:900px;"><table class="table table-hover">
+			<thead><tr><th></th><th>group name</th><th>description</th><th>creator</th></tr></thead><tbody>';
+			while($stmt->fetch()) {
+				echo "<tr><td><form name='form1' action='group.php' method='get'>
+				<input type='hidden' name='gid' value='".$gid."'> 
 				  <button type='submit' class='btn btn-info'>link</button>
 				</form></td>";
-				
-			for ($x = 0; $x <count($row)/2; $x++) {
-				
-				echo '<td>'.$row[$x].'</td>';
-				
+					echo "<td>".$gname."</td>";	
+					echo "<td>".$gdescription."</td>";
+					echo "<td>".$username."</td>";
+				echo "</tr>";
 			}
-			
-			echo "</tr>";
-		}
-		echo "</tbody></table></div>";
+			$stmt->close();
+			echo "</tbody></table></div>";
+		} else {
+	    	echo "Select group from groups table false";
+	    }
 	}
+
 	if($_GET["searchtype"] == "Event"){
-		$q = "SELECT eid, ename, edescription, edatetime, gname, username from 
-			groups natural join event join user on event.creator_id=user.uid where ename like '%".$_GET['keyword']."%'";
-		print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
-			<th></th><th>eid</th><th>event name</th><th>event description</th><th>schedule</th><th>group</th><th>creator</th></tr></thead><tbody>';
-		$result=do_query($_SESSION["link"], $q);
-		while($row = mysqli_fetch_array($result)){
-			
-			echo "<tr><td><form name='form1' action='event.php' method='get'>
-				<input type='hidden' name='eid' value='".$row["eid"]."'> 
+		if($stmt = $_SESSION["link"]->prepare("SELECT eid, ename, edescription, edatetime, gname, username from groups natural join event join user on event.creator_id=user.uid where ename like ?")) {
+			$keyword = '%'.$_GET['keyword'].'%';
+			$stmt->bind_param("s", $keyword);
+			$stmt->execute();
+			$stmt->bind_result($eid, $ename, $edescription, $edatetime, $gname, $username);
+			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
+			<th></th><th>event name</th><th>event description</th><th>schedule</th><th>group</th><th>creator</th></tr></thead><tbody>';
+			while($stmt->fetch()) {
+				echo "<tr><td><form name='form1' action='event.php' method='get'>
+				<input type='hidden' name='eid' value='".$eid."'> 
 				  <button type='submit' class='btn btn-info'>link</button>
 				</form></td>";
-			
-			for ($x = 0; $x <count($row)/2; $x++) {
-				
-				echo "<td>".$row[$x]."</td>";
-				
+					echo "<td>".$ename."</td>";	
+					echo "<td>".$edescription."</td>";	
+					echo "<td>".$edatetime."</td>";	
+					echo "<td>".$gname."</td>";
+					echo "<td>".$username."</td>";
+				echo "</tr>";
 			}
-			
-			echo "</tr>";
-		}
-		echo "</tbody></table></div>";
+			$stmt->close();
+			echo "</tbody></table></div>";
+		} else {
+	    	echo "Select event from event table false";
+	    }
 	}
+
+
 	if($_GET["searchtype"] == "User"){
-		$q = "SELECT uid, username, ucity, udescription, image from user where username like '%".$_GET['keyword']."%'";
-		// print_r($q);
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>uid</th><th>username</th><th>city</th><th>description</th></tr></thead><tbody>';
-		$result=do_query($_SESSION["link"], $q);
-		while($row = mysqli_fetch_array($result)){
-			
-			echo '<tr><td><p><img src="data:image/jpg;base64,'.base64_encode($row["image"]).'" width="100px"></p></td>';
-			
-			for ($x = 0; $x <count($row)/2-1; $x++) {
-				
-				echo "<td>".$row[$x]."</td>";
-				
+		if($stmt = $_SESSION["link"]->prepare("SELECT uid, username, ucity, udescription, image from user where username like ?")) {
+			$keyword = '%'.$_GET['keyword'].'%';
+			$stmt->bind_param("s", $keyword);
+			$stmt->execute();
+			$stmt->bind_result($uid, $username, $ucity, $udescription, $image);
+			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>username</th><th>city</th><th>description</th></tr></thead><tbody>';
+			while($stmt->fetch()) {
+				echo '<tr><td><p><img src="data:image/jpg;base64,'.base64_encode($image).'" width="100px"></p></td>';
+					echo "<td>".$username."</td>";	
+					echo "<td>".$ucity."</td>";	
+					echo "<td>".$udescription."</td>";	
+				echo "</tr>";
 			}
-			
-			echo "</tr>";
-		}
-		echo "</tbody></table></div>";
+			$stmt->close();
+			echo "</tbody></table></div>";
+		} else {
+	    	echo "Select event from event table false";
+	    }
 	}
 ?>

@@ -82,7 +82,7 @@
 									  </ul>
 									  </li>';
 									} else {
-										echo '<form action="#" method="post" class="navbar-form">
+										echo '<form action="logincheck.php" method="post" class="navbar-form">
 										<input class="form-control" type="email" required="required" name="email" placeholder="Email">
 										<input class="form-control" type="password" required="required" name="password" placeholder="Password">
 
@@ -110,32 +110,32 @@
 
 				<div class="carousel-inner" role="listbox">
 					<div class="item active">
-						<img class="first-slide" src="11.jpg" alt="First slide" width="460" height="345">
+						<img class="first-slide" src="3.jpg" alt="First slide" width="460" height="345">
 						<div class="container">
 							<div class="carousel-caption">
-								<h1>Example headline.</h1>
-								<p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
-								<p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+								<h1>Our awesome groups.</h1>
+								<p></p>
+								<p><a class="btn btn-lg btn-primary" href="allgroup.php" role="button">Welcome join us</a></p>
 							</div>
 						</div>
 					</div>
 					<div class="item">
-						<img class="second-slide" src="12.jpg" alt="Second slide">
+						<img class="second-slide" src="2.jpg" alt="Second slide" width="460" height="345">
 						<div class="container">
 							<div class="carousel-caption">
-								<h1>Another example headline.</h1>
-								<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-								<p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+								<h1 class="story__headline">11 delicious no-cook plates to bring to a party.</h1>
+								<p>Bring-a-plate success is as easy as smart shopping and these summery no-cook solutions that will ensure you're invited back. </p>
+								<p><a class="btn btn-lg btn-primary" href="allrecipe.php" role="button">Learn more</a></p>
 							</div>
 						</div>
 					</div>
 					<div class="item">
-						<img class="third-slide" src="13.jpg" alt="Third slide" width="460" height="345">
+						<img class="third-slide" src="1.jpg" alt="Third slide" width="460" height="345">
 						<div class="container">
 							<div class="carousel-caption">
-								<h1>One more for good measure.</h1>
-								<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-								<p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+								<h1>Wonderful events you don't want to miss.</h1>
+								<p></p>
+								<p><a class="btn btn-lg btn-primary" href="allevent.php" role="button">Browse events</a></p>
 							</div>
 						</div>
 					</div>
@@ -180,22 +180,22 @@
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
 				<div class="col-lg-4">
-					<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-					<h2>Heading</h2>
-					<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-					<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+					<img class="img-circle" src="01.jpg" alt="Generic placeholder image" width="240" height="240">
+					<h2>Sydney opens its first rice burger bar</h2>
+					<p>Guess what? Burger nerds stuck in an unending "brioche vs milk bun" argument now have a new topic to battle: the bun-free burger...</p>
+					<p><a target="view_window" class="btn btn-default" href="http://www.goodfood.com.au/eat-out/just-open/sydney-opens-its-first-rice-burger-bar-gojima-at-the-star-in-pyrmont-20161213-gtantw" role="button">View details &raquo;</a></p>
 				</div><!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-					<h2>Heading</h2>
-					<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-					<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+					<img class="img-circle" src="02.jpg" alt="Generic placeholder image" width="240" height="240">
+					<h2>Cool off this summer with an Aperol spritz</h2>
+					<p>The sunset is particularly orange at Pontoon. The sun ripples off St Kilda beach's waters but also over bronzed and hairless arms holding Aperol spritz by the jugful.</p>
+					<p><a class="btn btn-default" href="http://www.goodfood.com.au/pontoon-st-kilda/pontoon-restaurant-review-20161212-gt9fpl" role="button">View details &raquo;</a></p>
 				</div><!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-					<h2>Heading</h2>
-					<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-					<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+					<img class="img-circle" src="03.jpg" alt="Generic placeholder image" width="240" height="240">
+					<h2>Wake up to brunch by The best chefs</h2>
+					<p>A Finnish brunch from the Pasi Petanen pop up at Auto Lab</p>
+					<p><a class="btn btn-default" href="http://www.goodfood.com.au/auto-lab-chippendale/auto-lab-20161209-gt7ta9" role="button">View details &raquo;</a></p>
 				</div><!-- /.col-lg-4 -->
 			</div><!-- /.row -->
 
@@ -206,11 +206,12 @@
 
 			<div class="row featurette">
 				<div class="col-md-7">
-					<h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-					<p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+					<h2 class="featurette-heading">DIY cocktails. <span class="text-muted">It'll blow your mind.</span></h2>
+					<p class="lead">Plus retro puddings, lightbulb drinks and how to trick kids into eating brekkie. 
+					Hopscotch, an urban beer bar, opened in Melbourne last Friday – but it's not the 30 beers on tap that have us talking. </p>
 				</div>
 				<div class="col-md-5">
-					<img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+					<img class="featurette-image img-responsive center-block" src="h1.jpg" alt="Generic placeholder image">
 				</div>
 			</div>
 
@@ -218,11 +219,12 @@
 
 			<div class="row featurette">
 				<div class="col-md-7 col-md-push-5">
-					<h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-					<p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+					<h2 class="featurette-heading">Traditional Christmas menu.<span class="text-muted">Just try it</span></h2>
+					<p class="lead">Can't decide what to cook this year? Try a mixed approach. It's the annual dilemma – to cook a traditional Christmas meal or a contemporary one? Here's the best of both worlds, the trad/mod Christmas dinner, 
+					beginning with a do-ahead smoked salmon mousse brought bang up-to-date with a tangy herb gelee...</p>
 				</div>
 				<div class="col-md-5 col-md-pull-7">
-					<img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+					<img class="featurette-image img-responsive center-block" src="h2.jpg" alt="Generic placeholder image">
 				</div>
 			</div>
 
@@ -230,11 +232,11 @@
 
 			<div class="row featurette">
 				<div class="col-md-7">
-					<h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-					<p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+					<h2 class="featurette-heading">Amazing vegetarian salads.<span class="text-muted">You'll want to try</span></h2>
+					<p class="lead">Make these summer-friendly recipes from Hetty McKinnon's latest cookbook. Salad Recipes from Arthur Street Kitchen, which in turn was based on her small but flourishing business of cooking up hearty, vegetarian fare which she delivered (by bike) to those living near her home in Arthur Street in Sydney's Surry Hills... </p>
 				</div>
 				<div class="col-md-5">
-					<img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+					<img class="featurette-image img-responsive center-block" src="h3.jpg" alt="Generic placeholder image">
 				</div>
 			</div>
 

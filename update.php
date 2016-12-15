@@ -3,21 +3,20 @@
 	print_r($_POST);
 	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
 	
-	
+	//edit user
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="user"){  
-		$username = $_POST["username"];
-		$birthday = $_POST["birthday"];  
-		$city = $_POST["city"];  
-		$udescription = $_POST["description"];  
-		$query = "UPDATE user SET username='".$username."', birthday='".$birthday."',ucity='".$city."', udescription='".$udescription."' WHERE uid='".$_SESSION["uid"]."'";
-		print_r($query);
-		if($result=do_query($_SESSION["link"], $query)){
-			echo "<script>alert('successful！');</script>";
-		} else {
-			echo "<script>alert('fail！');</script>";
+		if($stmt = $_SESSION["link"]->prepare("UPDATE user SET username=?, birthday=?, ucity=?, udescription=? WHERE uid=?")) {
+			$stmt->bind_param("ssssi", $_POST["username"], $_POST["birthday"], $_POST["city"], $_POST["description"], $_SESSION["uid"]);
+			$stmt->execute();
+			$stmt->close();
+			echo "update user table successfully";
+		}
+		else {
+		    echo "Update user table false";
 		}
 	}
 	
+	//my recipe
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="recipe"){
 		$content=null;
 		if(isset($_FILES["fileToUpload"]["tmp_name"]) && $_FILES["fileToUpload"]["tmp_name"]){
@@ -26,52 +25,73 @@
 			$content=fread($fp, filesize($_FILES["fileToUpload"]["tmp_name"]));
 			$content=addslashes($content);
 			fclose($fp);
-			echo '<p><img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
 		}
-		
-		$query="insert into recipes(uid, rtitle, serv_num, rdescription, postdatetime, pic) 
-				values('".$_POST["uid"]."','".$_POST["rname"]."','".$_POST["serving"]."','".$_POST["description"]."', now(),'".$content."')";  
-		if($result=do_query($_SESSION["link"], $query)){
-			echo "<script>alert('successful！');</script>";
-		} else {
-			echo "<script>alert('fail！');</script>";
-		}
-		
-		// get rid
-		$pre_query="select rid from recipes where rtitle='".$_POST["rname"]."'";
-		$r=do_query($_SESSION["link"], $pre_query);
-		$row=mysqli_fetch_array($r);
-		
-		// update tag
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO recipes (uid, rtitle, serv_num, rdescription, postdatetime, pic) VALUES (?, ?, ?, ?, now(), ?)")) {
+			$stmt->bind_param("isisb", $_POST["uid"], $_POST["rname"], $_POST["serving"], $_POST["description"], $content);
+			$stmt->execute();
+			$stmt->close();
+			echo "New record has been inserted into recipes table successfully";
+	    } else {
+	    	echo "Insert into recipes table false";
+	    }
+	    //get rid;
+	    if($stmt = $_SESSION["link"]->prepare("select rid from recipes  where rtitle=?")) {
+			$stmt->bind_param("s", $_POST["rname"]);
+			$stmt->execute();
+	        $stmt->bind_result($rid);
+	        $stmt->fetch();
+	        $stmt->close();
+	        echo "Select rid from recipes successfully";
+	    } else {
+	    	echo "Select rid from recipes false";
+	    }
+
+	    // update tag
 		for($count=1;$count<8;$count++){
 			if(isset($_POST["tag".$count])){
-				$query="insert into hastags(rid, tid) 
-						values('".$row["rid"]."','".$_POST["tag".$count]."')"; 		
-				// print_r($query);
-				do_query($_SESSION["link"], $query);	
+				if($stmt = $_SESSION["link"]->prepare("INSERT INTO hastags (rid, tid) VALUES (?, ?)")) {
+					$stmt->bind_param("ii", $rid, $_POST["tag".$count]);
+					$stmt->execute();
+					$stmt->close();
+			    } else {
+			    	echo "Insert into recipes table false";
+			    }
 				// update related recipes
-				$f_query="select rid from hastags where rid<>".$row["rid"]." and tid=".$_POST["tag".$count];
-				print_r($f_query);
-				if($result2=do_query($_SESSION["link"], $f_query)){
-					while($row2=mysqli_fetch_array($result2)){
-						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$row["rid"]."')";
-						print_r($s_query);
-						do_query($_SESSION["link"], $s_query);
-					}
+			    if($stmt = $_SESSION["link"]->prepare("select rid from hastags where rid<>? and tid=?")) {
+			    	$stmt->bind_param("ii", $rid, $_POST["tag".$count]);
+					$stmt->execute();
+					$stmt->bind_result($rid2);
+	        		while($stmt->fetch()) {
+	        			if($stmt2 = $_SESSION["link"]->prepare("INSERT INTO link (rid1, rid2) VALUES (?, ?)")) {
+							$stmt2->bind_param("ii", $rid2, $rid);
+							$stmt2->execute();
+							$stmt2->close();
+						}
+	        		}
+					$stmt->close();
 				}
 			}
-		}		
-		
-		// update ingredient
-		
+		}
+
+	    if($stmt = $_SESSION["link"]->prepare("INSERT INTO hastags (rid, tid) VALUES (?, ?)")) {
+			$stmt->bind_param("ii", $rid, $content);
+			$stmt->execute();
+			$stmt->close();
+			echo "New record has been inserted into recipes table successfully";
+	    } else {
+	    	echo "Insert into recipes table false";
+	    }
+	    // update ingredient
 		for($i=1;$i<=$_POST["numRows"];$i++){
-			$query="insert into ingredients(rid, iname, iquantities, unit) 
-				value('".$row["rid"]."','".$_POST["ingredient".$i]."','".$_POST["quantities".$i]."','".$_POST["unit".$i]."')";  
-				print_r($query);
-			if(do_query($_SESSION["link"], $query))
-				echo "<script>alert('successful！');</script>";
-			else
-				echo "<script>alert('fail！');</script>";
+			if($stmt = $_SESSION["link"]->prepare("INSERT INTO ingredients (rid, iname, iquantities, unit) VALUES (?, ?, ?, ?)")) {
+				$stmt->bind_param("isis", $rid, $_POST["ingredient".$i], $_POST["quantities".$i], $_POST["unit".$i]);
+				$stmt->execute();
+				$stmt->close();
+				echo "Insert into ingredients successfully";
+			} else {
+				echo "Insert into ingredients false";
+			}
 		}
 	}
 	
@@ -97,68 +117,73 @@
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
 			$content3=addslashes($content);
 			fclose($fp);
-			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
 		}
-		
-		$query="insert into review(rid, uid, rating, title, text, suggestions, pic1,pic2,pic3) 
-		values('".$_POST["rid"]."','".$_SESSION["uid"]."','".$_POST["rating"]."','".$_POST["title"]."','".$_POST["description"]."','".$_POST["suggestion"]."','".$content."','".$content2."','".$content3."')";  
-		// print_r($query);
-		if($result=do_query($_SESSION["link"], $query)){
-			echo "<script>alert('successful！');</script>";
-		} else {
-			echo "<script>alert('fail！');</script>";
-		}
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO review (rid, uid, rating, title, text, suggestions, pic1, pic2, pic3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+			$stmt->bind_param("iiisssbbb", $_POST["rid"], $_SESSION["uid"], $_POST["rating"], $_POST["title"], $_POST["description"], $_POST["suggestion"], $content, $content2, $content3);
+			$stmt->execute();
+			$stmt->close();
+			echo "Insert into review table successfully";
+	    } else {
+	    	echo "Insert into review table false";
+	    }
 	}
-
-	
-	
 	
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="group"){
-		$query="insert into groups(creatorid, gname, gdescription) values('".$_SESSION["uid"]."','".$_POST["gname"]."','".$_POST["description"]."')";  
-		print_r($query);
-		if(do_query($_SESSION["link"], $query)==true){
-			$pre_query="select gid from groups where gname='".$_POST["gname"]."'";
-			$r=do_query($_SESSION["link"], $pre_query);
-			$row=mysqli_fetch_array($r);
-			print_r($row);
-			$query="insert into joins(gid, memberid) values('".$row["gid"]."','".$_SESSION["uid"]."')"; 
-			if($result=do_query($_SESSION["link"], $query)){
-				echo "<script>alert('good！');</script>";
-			} else {
-				echo "<script>alert('not good！');</script>";
-			}
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO groups (creatorid, gname, gdescription) VALUES (?, ?, ?)")) {
+			$stmt->bind_param("iss", $_SESSION["uid"], $_POST["gname"], $_POST["description"]);
+			$stmt->execute();
+			$stmt->close();
+			echo "New records has been inserted into groups table successfully";
 		} else {
-			echo "<script>alert('The group name has already existed！');</script>";//history.go(-1);
-		}		
+	    	echo "Inserted into groups table false";
+	    }
+		if($stmt = $_SESSION["link"]->prepare("select gid from groups where gname=?")) {
+			$stmt->bind_param("s", $_POST["gname"]);
+			$stmt->execute();
+			$stmt->bind_result($gid);
+			$stmt->fetch();
+			$stmt->close();
+		} else {
+	    	echo "select from groups false";
+	    }
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO joins (gid, memberid) VALUES (?, ?)")) {
+			$stmt->bind_param("ii", $gid, $_SESSION["uid"]);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+	    	echo "Inserted into joins table false";
+	    }
 	}
 	
 	
-	
-	// add event
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="event"){
-		// get gid
-		$pre_query="select gid from groups where gname='".$_POST["group"]."'";
-		if($r=do_query($_SESSION["link"], $pre_query)){
-			$row=mysqli_fetch_array($r);
-			print_r($row);
+		if($stmt = $_SESSION["link"]->prepare("select gid from groups where gname=?")) {
+			$stmt->bind_param("s", $_POST["group"]);
+			$stmt->execute();
+			$stmt->bind_result($gid);
+			$stmt->fetch();
+			$stmt->close();
 		} else {
-			echo '<script>alert("no group found!");</script>';
+			   echo "select from groups false";
 		}
-		$query="insert into event(gid, ename, edescription, edatetime, creator_id) 
-		values('".$row["gid"]."','".$_POST["ename"]."','".$_POST["edescription"]."','".$_POST["schedule"]."','".$_SESSION["uid"]."')";  
-		print_r($query);
-		if($result=do_query($_SESSION["link"], $query)){
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO event (gid, ename, edescription, edatetime, creator_id) VALUES (?, ?, ?, ?, ?)")) {
+			$stmt->bind_param("isssi", $gid, $_POST["ename"], $_POST["edescription"], $_POST["schedule"], $_SESSION["uid"]);
+			$stmt->execute();
+			$stmt->close();
 			// get eid
-			$pre_query="select eid from event where ename='".$_POST["ename"]."'";
-			print_r($pre_query);		
-			$r=do_query($_SESSION["link"], $pre_query);
-			$e=mysqli_fetch_array($r);		
-			$f_query="insert into rsvp values('".$_SESSION["uid"]."','".$e["eid"]."', now())";  
-			print_r($f_query);
-			do_query($_SESSION["link"], $f_query);
-			echo "<script>alert('successful！');</script>";
-		} else {
-			echo "<script>alert('fail！');</script>";
+			if($stmt = $_SESSION["link"]->prepare("select eid from event where ename=?")) {
+				$stmt->bind_param("s", $gid, $_POST["ename"]);
+				$stmt->execute();
+				$stmt->bind_result($eid);
+				$stmt->fetch();
+				$stmt->close();
+				//insert into RSVP
+				if($stmt = $_SESSION["link"]->prepare("INSERT INTO rsvp (uid, eid) VALUES (?, ?)")) {
+					$stmt->bind_param("ii", $_SESSION["uid"], $eid);
+					$stmt->execute();
+					$stmt->close();
+				}
+			}
 		}
 	}
 	
@@ -199,29 +224,26 @@
 		} else {
 			$content3=null;
 		}
-		// 
-		$query="insert into report(title, writerid, content, pic1, pic2, pic3) 
-	values('".$_POST["Report_title"]."','".$_SESSION["uid"]."','".$_POST["Report_content"]."','".$content1."','".$content2."','".$content3."')";  
-		// print_r($query);
-		if($result=do_query($_SESSION["link"], $query)){
-			echo "<script>alert('successful！');</script>";
+		//INSERT INTO report
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO report (title, writerid, content, pic1, pic2, pic3) VALUES (?, ?, ?, ?, ?, ?)")) {
+			$stmt->bind_param("sisbbb", $_POST["Report_title"], $_SESSION["uid"], $_POST["Report_content"], $content1, $content2, $content3);
+			$stmt->execute();
+			$stmt->close();
 		} else {
-			echo "<script>alert('insert into report fail！');</script>";
-		}
-		$query = "select reportid from report where title = '".$_POST["Report_title"]."' and writerid ='".$_SESSION["uid"]."' and content = '".$_POST["Report_content"]."'";
-		if($result=do_query($_SESSION["link"], $query)) {
-			$row = mysqli_fetch_array($result);
-			$reportid = "".$row[0]."";
-			$query="insert into reporttoevent(reportid, eid) values('".$reportid."','".$_POST["eid"]."')";
-			if($result=do_query($_SESSION["link"], $query)){
-			echo "<script>alert('successful！');</script>";
-			} else {
-				echo "<script>alert('insert into reporttoevent fail！');</script>";
+	    	echo "Inserted into joins table false";
+	    }
+	    if($stmt = $_SESSION["link"]->prepare("select reportid from report where title=? and writerid=? and content=?")) {
+			$stmt->bind_param("sis", $_POST["Report_title"], $_SESSION["uid"], $_POST["Report_content"]);
+			$stmt->execute();
+			$stmt->bind_result($reportid);
+			$stmt->fetch();
+			$stmt->close();
+	    	if($stmt = $_SESSION["link"]->prepare("INSERT INTO reporttoevent (reportid, eid) VALUES (?, ?)")) {
+			$stmt->bind_param("ii", $reportid, $_POST["eid"]);
+			$stmt->execute();
+			$stmt->close();
 			}
-		} else {
-			echo "<script>alert('select reportid fail！');</script>";
 		}
-
 	}
 
 	
@@ -270,5 +292,15 @@
 		}
 		// echo "<script>alert('log has deleted!'); history.go(-1);</script>";  
 	}
-	// echo "<script>location.href='homepage.php';</script>";
+	
+	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="rsvp") {
+		$query="insert into rsvp values('".$_SESSION["uid"]."','".$_GET["eid"]."', now())";
+		print_r($query);
+		if($result=do_query($_SESSION["link"], $query)){
+			echo "<script>alert('successful！');</script>";
+		} else {
+			echo "<script>alert('fail！');</script>";
+		}
+	}
+	echo "<script>location.href='userpage.php';</script>";
 ?>
