@@ -57,6 +57,10 @@
 		height:48px;
 		border-radius: 5px;
 	}
+	
+	#f{
+		display:none;
+	}
 	</style>
     </head>
   
@@ -132,6 +136,10 @@
 					</form> 
 				</div>
 			</div>
+			<footer id="f">
+				<p class="pull-right"><a href="#">Back to top</a></p>
+				<p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+			</footer>
 
 <?php
 	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
@@ -166,5 +174,5 @@
 		// return $value;
 	// }
 ?>
-	
+
 	

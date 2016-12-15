@@ -2,14 +2,14 @@
 	include 'function.php';
 	echo'<div class="container" style="width:900px">
 		<ul class="nav nav-tabs">
-			<li class="active"><a data-toggle="tab" href="#recipe">History Recipe</a></li>
-			<li><a data-toggle="tab" href="#tag">History Tag</a></li>
-			<li><a data-toggle="tab" href="#searchwords">History Search</a></li>
+			<li class="active"><a data-toggle="tab" href="#recipe">Recipe History</a></li>
+			<li><a data-toggle="tab" href="#tag"> Tag History</a></li>
+			<li><a data-toggle="tab" href="#searchwords">Search History </a></li>
 	    </ul>
 	    <div class="tab-content">
 		<div id="recipe" class="tab-pane fade in active">';
 		//recipe
-		$query = "SELECT logid, rid, rtitle, serv_num, rdescription, logtime, pic from log join recipes where log.uid='".$_SESSION["uid"]."' and log.logtype='recipe' and log.logvalue=recipes.rtitle";
+		$query = "SELECT logid, rid, rtitle, serv_num, rdescription, logtime, pic from log join recipes where log.uid='".$_SESSION["uid"]."' and log.logtype='recipe' and log.logvalue=recipes.rtitle order by logtime DESC";
 		print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
@@ -34,7 +34,7 @@
 		echo'</div>';
 		//tag
 		echo '<div id="tag" class="tab-pane fade">';
-		$query = "SELECT logid, logvalue, logtime from log join tags on log.logvalue=tags.tagname where log.uid=".$_SESSION["uid"]." and log.logtype='tag'";
+		$query = "SELECT logid, logvalue, logtime from log join tags on log.logvalue=tags.tagname where log.uid=".$_SESSION["uid"]." and log.logtype='tag' order by logtime DESC";
 		print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
@@ -59,7 +59,7 @@
 		echo'</div>';
 		//Search
 		echo '<div id="searchwords" class="tab-pane fade">';
-		$query = "SELECT logid, logvalue, logtime from log where log.uid='".$_SESSION["uid"]."' and logtype = 'search'";
+		$query = "SELECT logid, logvalue, logtime from log where log.uid='".$_SESSION["uid"]."' and logtype = 'search' order by logtime DESC";
 		print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>

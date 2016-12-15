@@ -78,15 +78,11 @@
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Hello, '.$_SESSION["username"].'!</span><span class="caret"></span></a>
 										<ul class="dropdown-menu">
 										  <li><a href="userpage.php"><span>profile</span></a></li>
-										  <li>profile</li>
-										  <li>profile</li>
-										  <li>profile</li>
-										  <li>profile</li>
 										  <li><a href="logout.php">log out </a></li>
 									  </ul>
 									  </li>';
 									} else {
-										echo '<form action="logincheck.php" method="post" class="navbar-form">
+										echo '<form action="#" method="post" class="navbar-form">
 										<input class="form-control" type="email" required="required" name="email" placeholder="Email">
 										<input class="form-control" type="password" required="required" name="password" placeholder="Password">
 

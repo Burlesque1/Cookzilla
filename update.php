@@ -21,12 +21,12 @@
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="recipe"){
 		$content=null;
 		if(isset($_FILES["fileToUpload"]["tmp_name"]) && $_FILES["fileToUpload"]["tmp_name"]){
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload"]["tmp_name"],'r');
 			$content=fread($fp, filesize($_FILES["fileToUpload"]["tmp_name"]));
 			$content=addslashes($content);
 			fclose($fp);
-			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+			echo '<p><img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
 		}
 		
 		$query="insert into recipes(uid, rtitle, serv_num, rdescription, postdatetime, pic) 
@@ -37,9 +37,32 @@
 			echo "<script>alert('fail！');</script>";
 		}
 		
+		// get rid
 		$pre_query="select rid from recipes where rtitle='".$_POST["rname"]."'";
 		$r=do_query($_SESSION["link"], $pre_query);
 		$row=mysqli_fetch_array($r);
+		
+		// update tag
+		for($count=1;$count<8;$count++){
+			if(isset($_POST["tag".$count])){
+				$query="insert into hastags(rid, tid) 
+						values('".$row["rid"]."','".$_POST["tag".$count]."')"; 		
+				// print_r($query);
+				do_query($_SESSION["link"], $query);	
+				// update related recipes
+				$f_query="select rid from hastags where rid<>".$row["rid"]." and tid=".$_POST["tag".$count];
+				print_r($f_query);
+				if($result2=do_query($_SESSION["link"], $f_query)){
+					while($row2=mysqli_fetch_array($result2)){
+						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$row["rid"]."')";
+						print_r($s_query);
+						do_query($_SESSION["link"], $s_query);
+					}
+				}
+			}
+		}		
+		
+		// update ingredient
 		
 		for($i=1;$i<=$_POST["numRows"];$i++){
 			$query="insert into ingredients(rid, iname, iquantities, unit) 
@@ -59,17 +82,17 @@
 		$content2=null;
 		$content3=null;		
 		if($_FILES["fileToUpload1"]["tmp_name"] || $_FILES["fileToUpload2"]["tmp_name"] || $_FILES["fileToUpload3"]["tmp_name"]){
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
 			$content=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
 			$content=addslashes($content);
 			fclose($fp);
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
 			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
 			$content2=addslashes($content);
 			fclose($fp);
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
 			$content3=addslashes($content);
@@ -111,8 +134,9 @@
 	
 	
 	
-	
+	// add event
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="event"){
+		// get gid
 		$pre_query="select gid from groups where gname='".$_POST["group"]."'";
 		if($r=do_query($_SESSION["link"], $pre_query)){
 			$row=mysqli_fetch_array($r);
@@ -124,6 +148,14 @@
 		values('".$row["gid"]."','".$_POST["ename"]."','".$_POST["edescription"]."','".$_POST["schedule"]."','".$_SESSION["uid"]."')";  
 		print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
+			// get eid
+			$pre_query="select eid from event where ename='".$_POST["ename"]."'";
+			print_r($pre_query);		
+			$r=do_query($_SESSION["link"], $pre_query);
+			$e=mysqli_fetch_array($r);		
+			$f_query="insert into rsvp values('".$_SESSION["uid"]."','".$e["eid"]."', now())";  
+			print_r($f_query);
+			do_query($_SESSION["link"], $f_query);
 			echo "<script>alert('successful！');</script>";
 		} else {
 			echo "<script>alert('fail！');</script>";

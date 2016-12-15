@@ -10,7 +10,7 @@
 
 	$query_set[4]='SELECT rid, rtitle, serv_num, rdescription, postdatetime, username from recipes natural join user where rid="'.$rid.'";';
 	$query_set[5]="SELECT iname, iquantities, unit from recipes natural join ingredients where rid='".$rid."';";
-	$query_set[6]="SELECT reviewid, rating, title, text, suggestions, username from user natural join recipes join review on recipes.rid=review.rid where recipes.rid='".$rid."';";
+	$query_set[6]="SELECT reviewid, rating, title, text, suggestions, username, pic1, pic2, pic3 from user natural join recipes join review on recipes.rid=review.rid where recipes.rid='".$rid."';";
 	$query_set[3]="SELECT rid1, rtitle FROM link join recipes on link.rid1=recipes.rid where rid2=".$rid." union select rid2, rtitle from link join recipes on link.rid2=recipes.rid where rid1=".$rid;
 	$query_set[2]="SELECT tagname from tags natural join hastags where rid='".$rid."';";
 	for($i=2;$i<7;$i++){		
@@ -33,8 +33,8 @@
 		}
 		if($i==6){	// comments
 			echo $query_set[$i].'<div class="container" style="width:900px;"><table class="table table-hover">';
-			echo '<thead><label>comments:</label><th></th><th>review id</th><th>rating</th><th>title</th><th>text</th>
-				<th>suggestion</th><th>reviewer</th></thead><tbody>';
+			echo '<thead><label>comments:</label><th>comment id</th><th>rating</th><th>title</th><th>text</th>
+				<th>suggestion</th><th>reviewer</th><th>pic1</th><th>pic2</th><th>pic3</th></thead><tbody>';
 		}
 		if(!$result=do_query($_SESSION["link"], $query_set[$i])){
 			echo "<p>no result found!</p>";
@@ -45,15 +45,25 @@
 				if($i==3){
 					echo '<td><a class="btn btn-info" href="recipe.php?rid='.$row["rid1"].'">detail</a></td>';
 				}
-				if($i==6){
-					echo '<td><a class="btn btn-info" href="review.php?reviewid='.$row["reviewid"].'">detail</a></td>';
-				}
+				// if($i==6){
+					// echo '<td><a class="btn btn-info" href="review.php?reviewid='.$row["reviewid"].'">detail</a></td>';
+				// }
 				for ($x = 0; $x <count($row)/2; $x++) {
-					
+					if($i==6 && $x==count($row)/2-3)
+						break;
 					echo "<td>".$row[$x]."</td>";
 					
 				}
-				
+				if($i==6){
+					echo '<td>a</td><td>a</td><td>a</td>';
+					// if($row["pic1"])
+						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic1"]).'></p></td>';
+					// if($row["pic2"])
+						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic2"]).'></p></td>';
+					// if($row["pic3"])
+						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic3"]).'></p></td>';
+					// print_r($row);
+				}
 				echo "</tr>";
 			}
 
@@ -90,7 +100,7 @@
 				<div class="form-group">
 					<textarea type="review" class="form-control" rows="1" required="required" name="title" placeholder="write title..."></textarea>
 					<textarea type="review" class="form-control" rows="5" required="required" name="description" placeholder="write your review..."></textarea>
-					<textarea type="review" class="form-control" rows="2" required="required" name="suggestion" placeholder="write your suggestion..."></textarea>
+					<textarea type="review" class="form-control" rows="2" name="suggestion" placeholder="write your suggestion..."></textarea>
 				</div>
 				<div class="form-group">
 				<label for="rating">rating:</label>

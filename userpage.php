@@ -49,7 +49,6 @@ function foo(){
 </script>
 <?php
 	include 'function.php';
-	// event infomation
 	echo'<div class="container" style="width:900px">
 		<ul class="nav nav-tabs">
 			<li class="active"><a data-toggle="tab" href="#Event">My Event</a></li>
@@ -57,9 +56,13 @@ function foo(){
 			<li><a data-toggle="tab" href="#Recipe">My Recipe</a></li>
 			<li><a data-toggle="tab" href="#Group">My Group</a></li>
 			<li><a data-toggle="tab" href="#rsvp">My RSVP</a></li>
+			<li><a data-toggle="tab" href="#comment">My Comment</a></li>
+			<li><a data-toggle="tab" href="#report">My Report</a></li>
 	    </ul>
-	    <div class="tab-content">
-		<div id="Event" class="tab-pane fade in active">';
+	    <div class="tab-content">';
+	
+	// event infomation
+	echo	'<div id="Event" class="tab-pane fade in active">';
 	$query = "SELECT eid, ename, edescription, edatetime, gname from groups natural join event join user on user.uid=event.creator_id
 				where email='".$_SESSION['email']."'";
 	if($result=do_query($_SESSION["link"], $query)){
@@ -99,9 +102,15 @@ function foo(){
 			<input type="text" class="form-control" rows="5" required="required" name="edescription" placeholder="Write some description...">
 			</div>
 			<div class="form-group">
-			<label for="group">Group:</label>
-			<input type="text" class="form-control"required="required" name="group" placeholder="Group...">
-			</div>
+			<label for="group">Group:</label><select name="group">';
+			$qq="select gname from groups";
+			if($rr=do_query($_SESSION["link"], $qq)){
+				while($rw = mysqli_fetch_array($rr)){
+					echo '<option>'.$rw["gname"].'</option>';	
+				}
+			}
+			
+	echo	'</select></div>
 			<div class="form-group">
 			<label for="Schedule">Event schedule:</label>
 			<input type="DateTime-local" min="2016-11-30T00:00" class="form-control" required="required" name="schedule">
@@ -145,6 +154,14 @@ function foo(){
 				<div class="form-group">
 				<label class="control-label" for="uname">User name:</label>
 				<input type="text" class="form-control" required="required" name="username" placeholder="User name...">
+				</div>
+				<div class="form-group">
+				<label class="control-label" for="psw">password:</label>
+				<input type="password" class="form-control" required="required" name="psw" placeholder="password...">
+				</div>
+				<div class="form-group">
+				<label class="control-label" for="psw2">confirm password:</label>
+				<input type="password" class="form-control" required="required" name="psw2" placeholder="confirm password...">
 				</div>
 				<div class="form-group">
 					<label for="birthday">Birthday:</label>
@@ -214,19 +231,26 @@ function foo(){
 			<input type="number" class="form-control" required="required" name="serving">
 			</div>
 			<div class="form-group">
-			<label for="ingredient">Ingredient: <p class="btn btn-info" onclick="addRow()">add</p></label>
+			<label for="ingredient">Ingredient:</label>
 			<table id="ingre"><tbody><tr>
 			<td><input id="in" type="text" class="form-control"required="required" name="ingredient1" placeholder="Ingredient..."></td>
 			<td><input id="in" type="number" class="form-control"required="required" name="quantities1" placeholder="Quantities..."></td>
 			<td><select id="in2" name="unit1"><option>gram</option><option>pcs</option><option>mililiter</option></select></td></tr></tbody></table>
-			</div>
+			 <p class="btn btn-info pull-right" onclick="addRow()">add</p>
+			 </div>
 			<div class="form-group">
 			<label for="description">Description:</label>
 			<textarea type="text" class="form-control" rows="5" required="required" name="description" placeholder="Write some description..."></textarea>
 			</div>
 			<div class="form-group">
 				<label for="tag">Tag:</label>
-				<input type="text" class="form-control" required="required" name="tag" placeholder="Write some description...">
+				<i><u>Italian </u><input type="checkbox" name="tag1" value="1"/>
+				<u>Chinese </u><input type="checkbox" name="tag2" value="2" />
+				<u>Mexican </u><input type="checkbox" name="tag4" value="4" />
+				<u>Vegan </u><input type="checkbox" name="tag3" value="3"/>
+				<u>Desert </u><input type="checkbox" name="tag6" value="6"/>
+				<u>Spicy </u><input type="checkbox" name="tag5" value="5"/>
+				<u>Seafood </u><input type="checkbox" name="tag7" value="7"/></i>
 			</div>
 			<div class="form-group">
 				<label for="text">Image(.jpeg, .png):</label>
@@ -346,6 +370,59 @@ function foo(){
 			echo '<td><a href="update.php?searchtype=delete_rsvp&eid='.$eid.'" class="btn btn-danger" role="button">Quit</a></td>';
 			echo "</tr>";
 		}
-		echo "</tbody></table></div>";
+		echo "</tbody></table></div></div>";
+	}
+	
+	
+	
+	// comment
+	echo '<div id="comment" class="tab-pane fade">';	
+	$query = "SELECT reviewid, rid, rating, title, text, suggestions from review 
+		where uid='".$_SESSION['uid']."'";
+	if($result=do_query($_SESSION["link"], $query)){
+	echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
+			<th>comment id</th><th>recipe id</th><th>rating</th><th>comment title</th><th>text</th><th>suggestions</th>
+			<th></th></thead><tbody>';
+		while($row = mysqli_fetch_array($result)){
+			
+			echo '<tr>';
+			
+			for ($x = 0; $x <count($row)/2; $x++) {
+				
+				echo "<td>".$row[$x]."</td>";
+				
+			}
+			// $Event_eid = "".$row["eid"]."";
+			// echo '<td><a href="update.php?searchtype=delete_event&eid='.$Event_eid.'" class="btn btn-danger" role="button">Cancel</a></td>';
+			echo '<td><a href="recipe.php?rid='.$row["rid"].'">Detail</a></td></tr>';
+		}
+		echo "</tbody></table></div></div>";
+	} else{
+		// echo "<p>You have not created event!</p>";
+	}
+	
+	// report
+	echo '<div id="report" class="tab-pane fade">';	
+	$query = "SELECT reportid, title, content from report
+			where writerid='".$_SESSION['uid']."'";
+	if($result=do_query($_SESSION["link"], $query)){
+	echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
+			<th>report id</th><th>report title</th><th>content</th><th></th>
+			</tr></thead><tbody>';
+		while($row = mysqli_fetch_array($result)){
+			
+			echo '<tr>';
+			
+			for ($x = 0; $x <count($row)/2; $x++) {
+				
+				echo "<td>".$row[$x]."</td>";
+				
+			}
+			echo '<td><a href="update.php?searchtype="a" class="btn btn-danger" role="button">edit</a></td>';
+			echo "</tr>";
+		}
+		echo "</tbody></table></div></div>";
+	} else{
+		// echo "<p>You have not created event!</p>";
 	}
 ?>
