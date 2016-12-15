@@ -18,8 +18,6 @@
 	  padding-bottom: 40px;
 	  color: #5a5a5a;
 	}
-
-
 	/* CUSTOMIZE THE NAVBAR
 	-------------------------------------------------- */
 
@@ -66,7 +64,6 @@
 			<div class="navbar-wrapper">
 				<div class="container">
 					<nav class="navbar navbar-default navbar-fixed-top">
-						<!-- navbar-inverse: black navbar -->
 						<div class="container">
 							<div class="navbar-header">
 								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -81,24 +78,21 @@
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="homepage.php">Home</a></li>
-									<li><a href="#">Recipe</a></li>
-									<li><a href="#">Group</a></li>
-									<li><a href="#">Event</a></li>
-									<li><a href="#about">About</a></li>
-								</ul>
-								<ul class="nav navbar-nav navbar-right">
-								<?php 
-								// add dropdown to log out
+									<li><a href="allrecipe.php">Recipe</a></li>
+									<li><a href="allgroup.php">Group</a></li>
+									<li><a href="allevent.php">Event</a></li>
+									<?php 
 									session_start();
+									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+										echo '<li><a href="history.php">My History</a></li>';
+									}  
+									echo '</ul>';
+									echo '<ul class="nav navbar-nav navbar-right">';
 									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
 										echo '<li class="dropdown"> 
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Hello, '.$_SESSION["username"].'!</span><span class="caret"></span></a>
 										<ul class="dropdown-menu">
 										  <li><a href="userpage.php"><span>profile</span></a></li>
-										  <li>profile</li>
-										  <li>profile</li>
-										  <li>profile</li>
-										  <li>profile</li>
 										  <li><a href="logout.php">log out </a></li>
 									  </ul>
 									  </li>';

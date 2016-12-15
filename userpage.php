@@ -1,9 +1,36 @@
+<style>
+	#in{
+		width:400px;
+	}
+	#in2{
+		width:60px;
+		height:30px;
+	}
+
+
+</style>
 <script type="text/javascript">
+function addRow(){
+	var newTr = ingre.insertRow();
+	var newTd0 = newTr.insertCell();
+	var newTd1 = newTr.insertCell();
+	var newTd2 = newTr.insertCell();
+	var num=ingre.rows.length.toString();	
+	// alert(ingre.rows.length);
+	
+	newTd0.innerHTML='<input id="in" type="text" class="form-control"required="required" name="ingredient'+num+'" placeholder="Ingredient...">';
+	newTd1.innerHTML= '<input id="in" type="number" class="form-control"required="required" name="quantities'+num+'" placeholder="Quantities...">';
+	newTd2.innerHTML= '<select id="in2" name="unit'+num+'"><option>gram</option><option>pcs</option><option>mililiter</option></select>';
+	
+	var numRow=document.getElementById("nr");
+	numRow.value=ingre.rows.length;
+	alert(numRow.value);
+}
 function show(id){
 	// alert(id);
 	var div=document.getElementById(id);
-	if(div.style.display=="block"){ // == 判断div.display是否为显示
-		div.style.display="none"; //= 赋值也可了解成改变
+	if(div.style.display=="block"){ 
+		div.style.display="none"; 
 	}
 	else{
 		div.style.display="block";
@@ -12,8 +39,8 @@ function show(id){
 function foo(){
 	// alert("hehe");
 	var div=document.getElementById("table");
-	if(div.style.display=="block"){ // == 判断div.display是否为显示
-		div.style.display="none"; //= 赋值也可了解成改变
+	if(div.style.display=="block"){ 
+		div.style.display="none"; 
 	}
 	else{
 		div.style.display="block";
@@ -112,29 +139,29 @@ function foo(){
 	echo '<u onclick="show('.$tablename.')">Edit profile</u>
 		<div class="container" id="table2" style="width:900px; display:none ">
 			<form class="form-signup" action="update.php" method="post">
-			<div class="form-group">
-				<input type="hidden" class="form-control" name="searchtype" value="user">
-			</div>
-			<div class="form-group">
-			<label class="control-label" for="uname">User name:</label>
-			<input type="text" class="form-control" required="required" name="uname" placeholder="User name...">
-			</div>
-			<div class="form-group">
-			<label for="birthday">Birthday:</label>
-			<input type="date" class="form-control" required="required" name="birthday">
-			</div>
-			<div class="form-group">
-			<label for="city">City:</label>
-			<input type="text" class="form-control" required="required" name="city" placeholder="Your city...">
-			</div>
-			<div class="form-group">
-			<label for="description">Description:</label>
-			<input type="text" class="form-control" rows="5" required="required" name="description" placeholder="Write some description...">
-			</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
+				<div class="form-group">
+					<input type="hidden" class="form-control" name="searchtype" value="user">
+				</div>
+				<div class="form-group">
+				<label class="control-label" for="uname">User name:</label>
+				<input type="text" class="form-control" required="required" name="username" placeholder="User name...">
+				</div>
+				<div class="form-group">
+					<label for="birthday">Birthday:</label>
+					<input type="date" class="form-control" required="required" name="birthday">
+				</div>
+				<div class="form-group">
+					<label for="city">City:</label>
+					<input type="text" class="form-control" required="required" name="city" placeholder="Your city...">
+				</div>
+				<div class="form-group">
+					<label for="description">Description:</label>
+					<input type="text" class="form-control" rows="5" required="required" name="description" placeholder="Write some description...">
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</form>
 		  </div>
-		</div>';
+		  </div>';
 		
 	// recipes
 	echo '<div id="Recipe" class="tab-pane fade">';
@@ -176,6 +203,7 @@ function foo(){
 			<div class="form-group">
 				<input type="hidden" class="form-control" name="searchtype" value="recipe">
 				<input type="hidden" class="form-control" name="uid" value="'.$uid.'">
+				<input type="hidden" class="form-control" id="nr" name="numRows" value=1>
 			</div>
 			<div class="form-group">
 			<label class="control-label" for="rname">Recipe title:</label>
@@ -186,8 +214,15 @@ function foo(){
 			<input type="number" class="form-control" required="required" name="serving">
 			</div>
 			<div class="form-group">
+			<label for="ingredient">Ingredient: <p class="btn btn-info" onclick="addRow()">add</p></label>
+			<table id="ingre"><tbody><tr>
+			<td><input id="in" type="text" class="form-control"required="required" name="ingredient1" placeholder="Ingredient..."></td>
+			<td><input id="in" type="number" class="form-control"required="required" name="quantities1" placeholder="Quantities..."></td>
+			<td><select id="in2" name="unit1"><option>gram</option><option>pcs</option><option>mililiter</option></select></td></tr></tbody></table>
+			</div>
+			<div class="form-group">
 			<label for="description">Description:</label>
-			<input type="text" class="form-control" rows="5" required="required" name="description" placeholder="Write some description...">
+			<textarea type="text" class="form-control" rows="5" required="required" name="description" placeholder="Write some description..."></textarea>
 			</div>
 			<div class="form-group">
 				<label for="tag">Tag:</label>

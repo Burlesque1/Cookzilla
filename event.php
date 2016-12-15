@@ -1,3 +1,25 @@
+<script type="text/javascript">
+function show(id){
+	// alert(id);
+	var div=document.getElementById(id);
+	if(div.style.display=="block"){ 
+		div.style.display="none"; 
+	}
+	else{
+		div.style.display="block";
+	}
+}
+function foo(){
+	// alert("hehe");
+	var div=document.getElementById("table");
+	if(div.style.display=="block"){ 
+		div.style.display="none"; 
+	}
+	else{
+		div.style.display="block";
+	}
+}
+</script>
 <?php
 	include 'function.php';
 	$eid=$_GET["eid"];
@@ -44,8 +66,8 @@
 	}
 	
 	// report
-	$query_set[4]="SELECT reportid, title, content, username, pic1, pic2, pic3 from reporttoevent natural join report 
-			join user on report.writerid=user.uid where eid=".$eid;
+	echo'<div class="container" style="width:900px">';
+	$query_set[4]="SELECT reportid, title, content, writerid, pic1, pic2, pic3 from reporttoevent natural join report where eid=".$eid;
 	if($result=do_query($_SESSION["link"], $query_set[4])){
 		echo '<div class="container" style="width:900px;"><label>Event report:</label>
 			<table class="table table-hover"><thead><tr>
@@ -62,39 +84,45 @@
 					echo "<td>".$row[$x]."</td>";
 				else
 					echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row[$x]).'" width="100px"></p></td>';
-			
 			}
 			
 			echo "</tr>";
 		}
 		echo "</tbody></table></div>";
 	}
-	
-	if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
-		
-		echo '<div class="container" style="width:900px;">
-			<form class="form-signup" action="update.php" method="post">
+
+	$tablename="'table3'";
+	echo '<u onclick="show('.$tablename.')">Create report</u>
+		<div class="container" id="table3" style="width:900px; display:none ">
+			<form class="form-signup" action="update.php" method="post" enctype="multipart/form-data">
 			<div class="form-group">
-				<input type="hidden" class="form-control" name="searchtype" value="addreview">
-				<input type="hidden" class="form-control" name="rid" value="'.$rid.'">
-			</div>';
-		
-		echo '<div class="form-group">
-			<label for="text">review:</label>
-			<textarea type="review" class="form-control" rows="1" required="required" name="title" placeholder="write title..."></textarea>
-			<textarea type="review" class="form-control" rows="5" required="required" name="description" placeholder="write your review..."></textarea>
-			<textarea type="review" class="form-control" rows="2" required="required" name="suggestion" placeholder="write your suggestion..."></textarea>
+				<input type="hidden" class="form-control" name="searchtype" value="event_report">
+				<input type="hidden" class="form-control" name="uid" value="'.$_SESSION["uid"].'">
+				<input type="hidden" class="form-control" name="eid" value="'.$eid.'">
 			</div>
 			<div class="form-group">
-				<select name="rating">
-					<option value=5>5</option>
-					<option value=4>4</option>
-					<option value=3>3</option>
-					<option value=2>2</option>
-					<option value=1>1</option>
-				</select>
+			<label class="control-label" for="rname">Report title:</label>
+			<input type="text" class="form-control" required="required" name="Report_title" placeholder="Report Title...">
 			</div>
-			<button type="submit" class="btn btn-default">Submit</button>
-			</div></form>';
-		}
+			<div class="form-group">
+			<label for="description">Description:</label>
+			<input type="text" class="form-control" rows="5" cols="40" required="required" name="Report_content" placeholder="Write some description...">
+			</div>
+			<div class="form-group">
+				<label for="text">Image(.jpeg, .png):</label>
+				<input type="file" name="fileToUpload1" id="fileToUpload1" placeholder=".jpeg, .png">
+			</div>
+			<div class="form-group">
+				<label for="text">Image(.jpeg, .png):</label>
+				<input type="file" name="fileToUpload2" id="fileToUpload2" placeholder=".jpeg, .png">
+			</div>
+			<div class="form-group">
+				<label for="text">Image(.jpeg, .png):</label>
+				<input type="file" name="fileToUpload3" id="fileToUpload3" placeholder=".jpeg, .png">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		  </div>
+		</div>';
+		echo'</div>';
 ?>

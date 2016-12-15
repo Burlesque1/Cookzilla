@@ -10,7 +10,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Carousel Template for Bootstrap</title>
+		<title>Cookzilla Home Page</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -63,15 +63,16 @@
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="homepage.php">Home</a></li>
-									<li><a href="#">Recipe</a></li>
-									<li><a href="#">Group</a></li>
-									<li><a href="#">Event</a></li>
-									<li><a href="#about">About</a></li>
-								</ul>
-								<ul class="nav navbar-nav navbar-right">
-								<?php 
-								// add dropdown to log out
+									<li><a href="allrecipe.php">Recipe</a></li>
+									<li><a href="allgroup.php">Group</a></li>
+									<li><a href="allevent.php">Event</a></li>
+									<?php 
 									session_start();
+									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+										echo '<li><a href="history.php">My History</a></li>';
+									}  
+									echo '</ul>';
+									echo '<ul class="nav navbar-nav navbar-right">';
 									if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
 										echo '<li class="dropdown"> 
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Hello, '.$_SESSION["username"].'!</span><span class="caret"></span></a>

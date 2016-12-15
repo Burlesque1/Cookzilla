@@ -4,6 +4,19 @@
 		$q = "SELECT rid, rtitle, postdatetime, username, pic from recipes natural join user where rtitle like '%".$_GET['keyword']."%' order by rid";
 		// print_r($q);
 		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr><th>pic</th><th>#</th><th>Title</th><th>Post date</th><th>Creator</th></tr></thead><tbody>';
+		//insert into log
+		if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
+			$query="insert into log(uid, logtype, logvalue, logtime) 
+			values('".$_SESSION["uid"]."','search','".$_GET['keyword']."', now())";  
+			print_r($query);
+			if($result=do_query($_SESSION["link"], $query)){
+				echo "<script>alert('successful！');</script>";
+			} else {
+				echo "<script>alert('fail！');</script>";
+			}
+		}
+
+
 		$result=do_query($_SESSION["link"], $q);
 		while($row = mysqli_fetch_array($result)){
 			
