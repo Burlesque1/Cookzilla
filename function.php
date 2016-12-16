@@ -122,7 +122,7 @@
 				<div class="row" id="Summary">
 
 					<h1>Why Our Site Is Awesome</h1>
-					<p class="lead">good samples</p>
+					<p class="lead">Search our collection of over 10,000 recipes</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
 						<input type="text" id="search" name="keyword" required="required" class="search-query" placeholder="Search for...">

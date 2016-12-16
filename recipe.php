@@ -5,8 +5,6 @@
 	$r=do_query($_SESSION["link"], $q);
 	$row = mysqli_fetch_array($r);
 	$rid=$row["rid"];
-	echo '<div class="container" style="width:900px;">
-		<div><img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px"></div></div>';
 
 	$query_set[4]='SELECT rid, rtitle, serv_num, rdescription, postdatetime, username from recipes natural join user where rid="'.$rid.'";';
 	$query_set[5]="SELECT iname, iquantities, unit from recipes natural join ingredients where rid='".$rid."';";
@@ -15,33 +13,35 @@
 	$query_set[2]="SELECT tagname from tags natural join hastags where rid='".$rid."';";
 	for($i=2;$i<7;$i++){		
 		if($i==2){ 	// tag
-			echo $query_set[$i].'<div class="container" style="width:200px;"><table class="table table-hover">';
-			echo '<thead><label>tag:</label><th>tag name</th></thead><tbody>';
+			echo '<div class="container" style="width:200px;"><table class="table table-hover">';
+			echo '<thead><label>tag:</label><th></th></thead><tbody>
+			<tr><td><div><img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px"></div></td></tr><tr>';
 		}
 		if($i==3){	// related recipes
-			echo $query_set[$i].'<div class="container" style="width:600px;"><table class="table table-hover">';
-			echo '<thead><label>related recipes:</label><th></th><th>rid</th><th>title</th></thead><tbody>';
+			echo '<div class="container" style="width:600px;"><table class="table table-hover">';
+			echo '<thead><label>Related Recipes:</label><th></th><th>rid</th><th>title</th></thead><tbody>';
 		}
 		if($i==4){	// recipe detail
-			echo $query_set[$i].'<div class="container" style="width:900px;"><table class="table table-hover">';
-			echo '<thead><label>recipe detail:</label><th>rid</th><th>title</th>
+			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
+			echo '<thead><label>Recipe Tetail:</label><th>rid</th><th>title</th>
 				<th>servings</th><th>description</th><th>post time</th><th>creator</th></thead><tbody>';
 		}
 		if($i==5){	// ingredients
-			echo $query_set[$i].'<div class="container" style="width:900px;"><table class="table table-hover">';
-			echo '<thead><label>ingredients:</label><th>ingredient name</th><th>quantities</th><th>unit</th></thead><tbody>';
+			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
+			echo '<thead><label>Ingredients:</label><th>ingredient name</th><th>quantities</th><th>unit</th></thead><tbody>';
 		}
 		if($i==6){	// comments
-			echo $query_set[$i].'<div class="container" style="width:900px;"><table class="table table-hover">';
-			echo '<thead><label>comments:</label><th>comment id</th><th>rating</th><th>title</th><th>text</th>
-				<th>suggestion</th><th>reviewer</th><th>pic1</th><th>pic2</th><th>pic3</th></thead><tbody>';
+			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
+			echo '<thead><label>Comments:</label><th>comment id</th><th>rating</th><th>title</th><th>text</th>
+				<th>suggestion</th><th>Reviewer</th><th>pic1</th><th>pic2</th><th>pic3</th></thead><tbody>';
 		}
 		if(!$result=do_query($_SESSION["link"], $query_set[$i])){
 			echo "<p>no result found!</p>";
 			continue;			
 		}
 			while($row = mysqli_fetch_array($result)){
-				echo '<tr>';	
+				if(!isset($row['tagname']))
+					echo '<tr>';	
 				if($i==3){
 					echo '<td><a class="btn btn-info" href="recipe.php?rid='.$row["rid1"].'">detail</a></td>';
 				}
@@ -49,27 +49,29 @@
 					// echo '<td><a class="btn btn-info" href="review.php?reviewid='.$row["reviewid"].'">detail</a></td>';
 				// }
 				for ($x = 0; $x <count($row)/2; $x++) {
-					if($i==6 && $x==count($row)/2-3) {
+					if($i==6 && $x==count($row)/2-3)
 						break;
-					}
 					if(isset($row['tagname'])) {
-						echo '<td><a href="allrecipe.php?searchtype=tagtorecipe&tagname='.$row['tagname'].'">'.$row['tagname'].'</a></td>';
+						echo '<td><a class="btn btn-warning" href="allrecipe.php?searchtype=tagtorecipe&tagname='.$row['tagname'].'">'.$row['tagname'].'</a></td>';
+						if($x==count($row)/2-1)
+							echo "</tr>";
 					} else {
 						echo "<td>".$row[$x]."</td>";
 					}
 					
 				}
 				if($i==6){
-					echo '<td>';
+					// echo '<td>a</td><td>a</td><td>a</td>';
 					// if($row["pic1"])
 						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic1"]).'></p></td>';
 					// if($row["pic2"])
 						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic2"]).'></p></td>';
-					if($row["pic3"])
-						echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic3"]).'></p></td>';
-					echo '</td>';
+					// if($row["pic3"])
+						// echo '<td><p><img src="data:image/jpg;base64,'.base64_encode($row["pic3"]).'></p></td>';
+					// print_r($row);
 				}
-				echo "</tr>";
+				if(!isset($row['tagname']))
+					echo "</tr>";
 			}
 
 			echo "</tbody></table></div>";
@@ -80,20 +82,20 @@
 	//insert into log
 	if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
 		//insert into log
-		$query='SELECT rtitle from recipes where rid="'.$rid.'";';
-		// if($result=do_query($_SESSION["link"], $query)){
-			// $rtitle = mysqli_fetch_array($result)[0];
-			// $query="insert into log(uid, logtype, logvalue, logtime) 
-			// values('".$_SESSION["uid"]."','recipe','".$rtitle."', now())";  
+		/* $query='SELECT rtitle from recipes where rid="'.$rid.'";';
+		if($result=do_query($_SESSION["link"], $query)){
+			$rtitle = mysqli_fetch_array($result)[0];
+			$query="insert into log(uid, logtype, logvalue, logtime) 
+			values('".$_SESSION["uid"]."','recipe','".$rtitle."', now())";  
 			// print_r($query);
-			// if($result=do_query($_SESSION["link"], $query)){
-				// echo "<script>alert('successful！');</script>";
-			// } else {
-				// echo "<script>alert('fail！');</script>";
-			// }
-		// } else {
-			// echo "<script>alert('fail！');</script>";
-		// }
+			if($result=do_query($_SESSION["link"], $query)){
+				echo "<script>alert('successful！');</script>";
+			} else {
+				echo "<script>alert('fail！');</script>";
+			}
+		} else {
+			echo "<script>alert('fail！');</script>";
+		} */
 
 		echo '<div class="container" style="width:900px;">
 			<form class="form-signup" action="update.php" method="post" enctype="multipart/form-data">

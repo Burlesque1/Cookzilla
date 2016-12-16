@@ -22,13 +22,26 @@
 				width: 70%;
 				margin: auto;
 			}
+			
+			.panel--search__type {
+				background-position: 50%;
+				background-repeat: no-repeat;
+				background-size: cover;
+				padding: 25px 50px;
+			}
 			#Summary {
-
+				background: rgba(0,0,0,.55);
+				background-image:url(b.jpg);
+				border-radius: 4px;
+				color:white;
+				width:900px;
+				padding: 15px 30px 20px;
 				text-align: center;
 				margin-top:50px;
 				margin-bottom: 50px;
 			}
-			#searchdropdown {
+			#searchtype {
+				color:black;
 				width:70px;
 				height:48px;
 				border-radius: 5px;
@@ -37,6 +50,19 @@
 				width:400px;
 				height:48px;
 				border-radius: 5px;
+			}
+			#myCarousel
+			{
+				font: inherit;
+				font-style: inherit;
+				font-variant-ligatures: inherit;
+				font-variant-caps: inherit;
+				font-variant-numeric: inherit;
+				font-weight: inherit;
+				font-stretch: inherit;
+				font-size: 100%;
+				line-height: inherit;
+				font-family: inherit;
 			}
 		</style>
 	 <!-- Custom styles for this template -->
@@ -110,31 +136,31 @@
 
 				<div class="carousel-inner" role="listbox">
 					<div class="item active">
-						<img class="first-slide" src="3.jpg" alt="First slide" width="460" height="345">
+						<img class="first-slide" src="6.jpg" alt="First slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption">
-								<h1>Our awesome groups.</h1>
-								<p></p>
+							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
+								<h1 class="story__headline" style="">Our awesome groups.</h1>
+								<p>come and join us and have great meals and events</p>
 								<p><a class="btn btn-lg btn-primary" href="allgroup.php" role="button">Welcome join us</a></p>
 							</div>
 						</div>
 					</div>
 					<div class="item">
-						<img class="second-slide" src="2.jpg" alt="Second slide" width="460" height="345">
+						<img class="second-slide" src="4.jpg" alt="Second slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption">
-								<h1 class="story__headline">11 delicious no-cook plates to bring to a party.</h1>
-								<p>Bring-a-plate success is as easy as smart shopping and these summery no-cook solutions that will ensure you're invited back. </p>
+							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
+								<h1 class="story__headline" style="">delicious no-cook plates to bring to a party.</h1>
+								<p>these summery no-cook solutions that will ensure you're invited back. </p>
 								<p><a class="btn btn-lg btn-primary" href="allrecipe.php" role="button">Learn more</a></p>
 							</div>
 						</div>
 					</div>
 					<div class="item">
-						<img class="third-slide" src="1.jpg" alt="Third slide" width="460" height="345">
+						<img class="third-slide" src="8.jpg" alt="Third slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption">
-								<h1>Wonderful events you don't want to miss.</h1>
-								<p></p>
+							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
+								<h1 class="story__headline" style="">Wonderful events you don't want to miss.</h1>
+								<p>you can have a lot of fun here</p>
 								<p><a class="btn btn-lg btn-primary" href="allevent.php" role="button">Browse events</a></p>
 							</div>
 						</div>
@@ -150,18 +176,17 @@
 				</a>
 			 </div><!-- /.carousel -->
 
-
-
-			<div class="container">
-
-				<div class="row" id="Summary">
+			<div class="container"  id="Summary">
+			<section class="panel--search__type">
+				
+				<div class="row panel--search__wrap">
 
 					<h1>Why Our Site Is Awesome</h1>
-					<p class="lead">good samples</p>
+					<p class="lead">Search our collection of over 10,000 recipes</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
 						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
-						<select name="searchtype" id="searchdropdown">
+						<select name="searchtype" id="searchtype">
 							<option value ="Recipe">Recipe</option>
 							<option value="User">User</option>
 							<option value ="Group">Group</option>
@@ -170,6 +195,7 @@
 						<button type="submit" class="btn btn-info btn-lg">Search</button>
 					</form> 
 				</div>
+			</section>
 			</div>
 		<!-- Marketing messaging and featurettes
 		================================================== -->
@@ -189,13 +215,13 @@
 					<img class="img-circle" src="02.jpg" alt="Generic placeholder image" width="240" height="240">
 					<h2>Cool off this summer with an Aperol spritz</h2>
 					<p>The sunset is particularly orange at Pontoon. The sun ripples off St Kilda beach's waters but also over bronzed and hairless arms holding Aperol spritz by the jugful.</p>
-					<p><a class="btn btn-default" href="http://www.goodfood.com.au/pontoon-st-kilda/pontoon-restaurant-review-20161212-gt9fpl" role="button">View details &raquo;</a></p>
+					<p><a target="view_window" class="btn btn-default" href="http://www.goodfood.com.au/pontoon-st-kilda/pontoon-restaurant-review-20161212-gt9fpl" role="button">View details &raquo;</a></p>
 				</div><!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<img class="img-circle" src="03.jpg" alt="Generic placeholder image" width="240" height="240">
 					<h2>Wake up to brunch by The best chefs</h2>
 					<p>A Finnish brunch from the Pasi Petanen pop up at Auto Lab</p>
-					<p><a class="btn btn-default" href="http://www.goodfood.com.au/auto-lab-chippendale/auto-lab-20161209-gt7ta9" role="button">View details &raquo;</a></p>
+					<p><a target="view_window" class="btn btn-default" href="http://www.goodfood.com.au/auto-lab-chippendale/auto-lab-20161209-gt7ta9" role="button">View details &raquo;</a></p>
 				</div><!-- /.col-lg-4 -->
 			</div><!-- /.row -->
 
