@@ -87,7 +87,7 @@
 
 							<div id="navbar" class="navbar-collapse collapse">
 								<ul class="nav navbar-nav">
-									<li class="active"><a href="homepage.php">Home</a></li>
+									<li class="active"><a href="userpage.php">Home</a></li>
 									<li><a href="allrecipe.php">Recipe</a></li>
 									<li><a href="allgroup.php">Group</a></li>
 									<li><a href="allevent.php">Event</a></li>

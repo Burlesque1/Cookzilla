@@ -20,17 +20,54 @@
 	
 	//my recipe
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="recipe"){
-		$content=null;
-		if(isset($_FILES["fileToUpload"]["tmp_name"]) && $_FILES["fileToUpload"]["tmp_name"]){
-			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload"]["tmp_name"]));
-			$fp=fopen($_FILES["fileToUpload"]["tmp_name"],'r');
-			$content=fread($fp, filesize($_FILES["fileToUpload"]["tmp_name"]));
-			$content=addslashes($content);
+		// $content=null;
+		// if(isset($_FILES["fileToUpload"]["tmp_name"]) && $_FILES["fileToUpload"]["tmp_name"]){
+			// $img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload"]["tmp_name"]));
+			// $fp=fopen($_FILES["fileToUpload"]["tmp_name"],'r');
+			// $content=fread($fp, filesize($_FILES["fileToUpload"]["tmp_name"]));
+			// $content=addslashes($content);
+			// fclose($fp);
+			// echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+		// }
+		// 1
+		if($_FILES["fileToUpload1"]["tmp_name"]!=null) {
+			print_r($_FILES);
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
+			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
+			$content1=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
+			$content1=addslashes($content1);
 			fclose($fp);
 			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+		} else {
+			$content1=null;
 		}
-		if($stmt = $_SESSION["link"]->prepare("INSERT INTO recipes (uid, rtitle, serv_num, rdescription, postdatetime, pic) VALUES (?, ?, ?, ?, now(), ?)")) {
-			$stmt->bind_param("isisb", $_POST["uid"], $_POST["rname"], $_POST["serving"], $_POST["description"], $content);
+		// 2
+		if($_FILES["fileToUpload2"]["tmp_name"]!=null) {
+			print_r($_FILES);
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
+			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
+			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
+			$content2=addslashes($content2);
+			fclose($fp);
+			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+		} else {
+			$content2=null;
+		}
+		// 3
+		if($_FILES["fileToUpload3"]["tmp_name"]!=null) {
+			print_r($_FILES);
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
+			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
+			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
+			$content3=addslashes($content3);
+			fclose($fp);
+			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
+		} else {
+			$content3=null;
+		}
+		
+		if($stmt = $_SESSION["link"]->prepare("INSERT INTO recipes (uid, rtitle, serv_num, rdescription, postdatetime) VALUES (?, ?, ?, ?, now())")) {
+			$stmt->bind_param("isis", $_POST["uid"], $_POST["rname"], $_POST["serving"], $_POST["description"]);
 			$stmt->execute();
 			$stmt->close();
 		    //get rid;
@@ -42,7 +79,7 @@
 		        $stmt->close();
 	        }
 	    } 
-
+		
 	    // update tag
 		for($count=1;$count<8;$count++){
 			if(isset($_POST["tag".$count])){
@@ -60,6 +97,15 @@
 				}
 			}
 		}		
+		// UPDATE user SET username=?, upassword=?, birthday=?, ucity=?, udescription=? WHERE uid=?"
+		$ql="update recipes set pic=".$content1.", picii=".$content2.", piciii=".$content3." where rid=".$row2["rid"];
+		print_r($ql);
+		if(do_query($_SESSION["link"], $ql))
+			print_r("good");
+		else
+			print_r("bad");
+		
+		
 	    // update ingredient
 		for($i=1;$i<=$_POST["numRows"];$i++){
 			if($stmt = $_SESSION["link"]->prepare("INSERT INTO ingredients (rid, iname, iquantities, unit) VALUES (?, ?, ?, ?)")) {
@@ -73,7 +119,7 @@
 		}
 	}
 	
-	
+	// add comment
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="addreview"){
 		print_r($_FILES);
 		$content=null;
@@ -170,7 +216,7 @@
 		// 1
 		if($_FILES["fileToUpload1"]["tmp_name"]!=null) {
 			print_r($_FILES);
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
 			$content1=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
 			$content1=addslashes($content1);
@@ -182,7 +228,7 @@
 		// 2
 		if($_FILES["fileToUpload2"]["tmp_name"]!=null) {
 			print_r($_FILES);
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
 			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
 			$content2=addslashes($content2);
@@ -194,7 +240,7 @@
 		// 3
 		if($_FILES["fileToUpload3"]["tmp_name"]!=null) {
 			print_r($_FILES);
-			$img=mysqli_real_escape_string(file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
+			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
 			$content3=addslashes($content3);
@@ -305,5 +351,5 @@
 		}
 		
 	}
-	echo "<script>location.href='userpage.php';</script>";
+	// echo "<script>location.href='userpage.php';</script>";
 ?>

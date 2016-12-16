@@ -280,7 +280,9 @@ function foo(){
 			</div>
 			<div class="form-group">
 				<label for="text">Image(.jpeg, .png):</label>
-				<input type="file" name="fileToUpload" id="fileToUpload" placeholder=".jpeg, .png">
+				<input type="file" name="fileToUpload1" placeholder=".jpeg, .png">				
+				<input type="file" name="fileToUpload2" placeholder=".jpeg, .png">				
+				<input type="file" name="fileToUpload3" placeholder=".jpeg, .png">
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>
 			</form>
@@ -394,22 +396,22 @@ function foo(){
 			}
 			echo '<td><a href="update.php?searchtype=delete_review&reviewid='.$row["reviewid"].'" class="btn btn-danger" role="button">delete</a></td></tr>';
 		}
-		echo "</tbody></table></div>";
+		echo "</tbody></table></div></div>";
 	} else{
 		// echo "<p>You have not created event!</p>";
 	}
 	
 	// report
 	echo '<div id="report" class="tab-pane fade">';	
-	$query = "SELECT reportid, title, content from report
+	$query = "SELECT reportid, title, content, eid, ename from report natural join reporttoevent natural join event
 			where writerid='".$_SESSION['uid']."'";
 	if($result=do_query($_SESSION["link"], $query)){
 	echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
-			<th>Report id</th><th>Report title</th><th>Content</th><th>Edit</th>
+			<th></th><th>Report id</th><th>Report title</th><th>Content</th><th>Event id</th><th>Event Name</th><th>Delete</th>
 			</tr></thead><tbody>';
 		while($row = mysqli_fetch_array($result)){
 			
-			echo '<tr>';
+			echo '<tr><td><a href="event.php?eid='.$row["eid"].'" role="button">detail</a></td>';
 			
 			for ($x = 0; $x <count($row)/2; $x++) {
 				
@@ -418,7 +420,7 @@ function foo(){
 			}			
 			echo '<td><a href="update.php?searchtype=delete_report&reportid='.$row["reportid"].'" class="btn btn-danger" role="button">delete</a></td></tr>';
 		}
-		echo "</tbody></table></div>";
+		echo "</tbody></table></div></div>";
 	} else{
 		// echo "<p>You have not created event!</p>";
 	}
