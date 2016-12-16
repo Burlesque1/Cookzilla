@@ -132,7 +132,7 @@
 					<p class="lead">Search our collection of over 10,000 recipes</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
-						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
+						<input type="text" style="color:black;width:400px;height:48px;" name="keyword" required="required" class="search-query" placeholder="Search for...">
 						<select name="searchtype" id="searchtype">
 							<option value ="Recipe">Recipe</option>
 							<option value="User">User</option>

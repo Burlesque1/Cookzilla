@@ -13,12 +13,13 @@
 	$query_set[2]="SELECT tagname from tags natural join hastags where rid='".$rid."';";
 	for($i=2;$i<7;$i++){		
 		if($i==2){ 	// tag
-			echo '<div class="container" style="width:200px;"><table class="table table-hover">';
-			echo '<thead><label>tag:</label><th></th></thead><tbody>
-			<tr><td><div><img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px"></div></td></tr><tr>';
+			echo '<div class="container" style="width:600px;">
+			<div><img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px"></div><table class="table table-hover">';
+			echo '<thead><th></th></thead><tbody>
+			<tr>';
 		}
 		if($i==3){	// related recipes
-			echo '<div class="container" style="width:600px;"><table class="table table-hover">';
+			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
 			echo '<thead><label>Related Recipes:</label><th></th><th>rid</th><th>title</th></thead><tbody>';
 		}
 		if($i==4){	// recipe detail
@@ -53,8 +54,7 @@
 						break;
 					if(isset($row['tagname'])) {
 						echo '<td><a class="btn btn-warning" href="allrecipe.php?searchtype=tagtorecipe&tagname='.$row['tagname'].'">'.$row['tagname'].'</a></td>';
-						if($x==count($row)/2-1)
-							echo "</tr>";
+						
 					} else {
 						echo "<td>".$row[$x]."</td>";
 					}
@@ -82,20 +82,20 @@
 	//insert into log
 	if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
 		//insert into log
-		/* $query='SELECT rtitle from recipes where rid="'.$rid.'";';
+		$query='SELECT rtitle from recipes where rid="'.$rid.'";';
 		if($result=do_query($_SESSION["link"], $query)){
 			$rtitle = mysqli_fetch_array($result)[0];
 			$query="insert into log(uid, logtype, logvalue, logtime) 
 			values('".$_SESSION["uid"]."','recipe','".$rtitle."', now())";  
 			// print_r($query);
 			if($result=do_query($_SESSION["link"], $query)){
-				echo "<script>alert('successful！');</script>";
+				// echo "<script>alert('successful！');</script>";
 			} else {
 				echo "<script>alert('fail！');</script>";
 			}
 		} else {
 			echo "<script>alert('fail！');</script>";
-		} */
+		}
 
 		echo '<div class="container" style="width:900px;">
 			<form class="form-signup" action="update.php" method="post" enctype="multipart/form-data">

@@ -97,14 +97,14 @@
 				}
 			}
 		}		
+		
 		// UPDATE user SET username=?, upassword=?, birthday=?, ucity=?, udescription=? WHERE uid=?"
 		$ql="update recipes set pic=".$content1.", picii=".$content2.", piciii=".$content3." where rid=".$row2["rid"];
-		print_r($ql);
+		// print_r($ql);
 		if(do_query($_SESSION["link"], $ql))
 			print_r("good");
 		else
 			print_r("bad");
-		
 		
 	    // update ingredient
 		for($i=1;$i<=$_POST["numRows"];$i++){

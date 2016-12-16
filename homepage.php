@@ -136,9 +136,9 @@
 
 				<div class="carousel-inner" role="listbox">
 					<div class="item active">
-						<img class="first-slide" src="6.jpg" alt="First slide" width="460" height="345">
+						<img class="first-slide" src="7.jpg" alt="First slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
+							<div class="carousel-caption" style="background-color:hsla(240,18%,15%,.5);">
 								<h1 class="story__headline" style="">Our awesome groups.</h1>
 								<p>come and join us and have great meals and events</p>
 								<p><a class="btn btn-lg btn-primary" href="allgroup.php" role="button">Welcome join us</a></p>
@@ -148,8 +148,8 @@
 					<div class="item">
 						<img class="second-slide" src="4.jpg" alt="Second slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
-								<h1 class="story__headline" style="">delicious no-cook plates to bring to a party.</h1>
+							<div class="carousel-caption" style="background-color:hsla(240,18%,15%,.5);">
+								<h1 class="story__headline" style="">Delicious no-cook plates to bring to a party.</h1>
 								<p>these summery no-cook solutions that will ensure you're invited back. </p>
 								<p><a class="btn btn-lg btn-primary" href="allrecipe.php" role="button">Learn more</a></p>
 							</div>
@@ -158,7 +158,7 @@
 					<div class="item">
 						<img class="third-slide" src="8.jpg" alt="Third slide" width="460" height="345">
 						<div class="container">
-							<div class="carousel-caption" style="background-color:hsla(210,8%,95%,.9);">
+							<div class="carousel-caption" style="background-color:hsla(240,18%,15%,.5);">
 								<h1 class="story__headline" style="">Wonderful events you don't want to miss.</h1>
 								<p>you can have a lot of fun here</p>
 								<p><a class="btn btn-lg btn-primary" href="allevent.php" role="button">Browse events</a></p>
@@ -185,7 +185,7 @@
 					<p class="lead">Search our collection of over 10,000 recipes</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
-						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
+						<input type="text" style="color:black;width:400px;height:48px;" name="keyword" required="required" class="search-query" placeholder="Search for...">
 						<select name="searchtype" id="searchtype">
 							<option value ="Recipe">Recipe</option>
 							<option value="User">User</option>

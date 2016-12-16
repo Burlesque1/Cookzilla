@@ -10,7 +10,7 @@
 		<div id="recipe" class="tab-pane fade in active">';
 		//recipe
 		$query = "SELECT logid, rid, rtitle, serv_num, rdescription, logtime, pic from log join recipes where log.uid='".$_SESSION["uid"]."' and log.logtype='recipe' and log.logvalue=recipes.rtitle order by logtime DESC";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
 			<th></th><th>pic</th><th>logid</th><th>rid</th><th>rtitle</th><th>serv_num</th><th>rdescription</th><th>logtime</th><th>edit</th>
@@ -35,7 +35,7 @@
 		//tag
 		echo '<div id="tag" class="tab-pane fade">';
 		$query = "SELECT logid, logvalue, logtime from log join tags on log.logvalue=tags.tagname where log.uid=".$_SESSION["uid"]." and log.logtype='tag' order by logtime DESC";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
 			<th>logid</th><th>logvalue</th><th>logtime</th><th>edit</th>
@@ -60,7 +60,7 @@
 		//Search
 		echo '<div id="searchwords" class="tab-pane fade">';
 		$query = "SELECT logid, logvalue, logtime from log where log.uid='".$_SESSION["uid"]."' and logtype = 'search' order by logtime DESC";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
 			<th>logid</th><th>logvalue</th><th>logtime</th><th>edit</th>
