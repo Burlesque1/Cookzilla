@@ -20,91 +20,78 @@
 	
 	//my recipe
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="recipe"){
-		// $content=null;
-		// if(isset($_FILES["fileToUpload"]["tmp_name"]) && $_FILES["fileToUpload"]["tmp_name"]){
-			// $img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload"]["tmp_name"]));
-			// $fp=fopen($_FILES["fileToUpload"]["tmp_name"],'r');
-			// $content=fread($fp, filesize($_FILES["fileToUpload"]["tmp_name"]));
-			// $content=addslashes($content);
-			// fclose($fp);
-			// echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
-		// }
-		// 1
-		if($_FILES["fileToUpload1"]["tmp_name"]!=null) {
-			print_r($_FILES);
-			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
-			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
-			$content1=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
-			$content1=addslashes($content1);
-			fclose($fp);
-			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
-		} else {
-			$content1=null;
-		}
-		// 2
-		if($_FILES["fileToUpload2"]["tmp_name"]!=null) {
-			print_r($_FILES);
-			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
+		$content2=null;
+		if(isset($_FILES["fileToUpload2"]["tmp_name"]) && $_FILES["fileToUpload2"]["tmp_name"]){
+			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
 			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
 			$content2=addslashes($content2);
 			fclose($fp);
-			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
-		} else {
-			$content2=null;
+			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($content2).'" width="100px"></p>';
 		}
-		// 3
-		if($_FILES["fileToUpload3"]["tmp_name"]!=null) {
-			print_r($_FILES);
-			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
+		$content=null;
+		if(isset($_FILES["fileToUpload1"]["tmp_name"]) && $_FILES["fileToUpload1"]["tmp_name"]){
+			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
+			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
+			$content=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
+			$content=addslashes($content);
+			fclose($fp);
+			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($content).'" width="100px"></p>';
+		}
+		$content3=null;
+		if(isset($_FILES["fileToUpload3"]["tmp_name"]) && $_FILES["fileToUpload3"]["tmp_name"]){
+			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
 			$content3=addslashes($content3);
 			fclose($fp);
-			echo '<p>dfsdfs<img src="data:image/jpg;base64,'.base64_encode($img).'" width="100px"></p>';
-		} else {
-			$content3=null;
+			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($content3).'" width="100px"></p>';
 		}
 		
-		if($stmt = $_SESSION["link"]->prepare("INSERT INTO recipes (uid, rtitle, serv_num, rdescription, postdatetime) VALUES (?, ?, ?, ?, now())")) {
-			$stmt->bind_param("isis", $_POST["uid"], $_POST["rname"], $_POST["serving"], $_POST["description"]);
-			$stmt->execute();
-			$stmt->close();
-		    //get rid;
-		    if($stmt = $_SESSION["link"]->prepare("select rid from recipes  where rtitle=?")) {
-				$stmt->bind_param("s", $_POST["rname"]);
-				$stmt->execute();
-		        $stmt->bind_result($rid);
-		        $stmt->fetch();
-		        $stmt->close();
-	        }
-	    } 
+		$_POST["rname"]=str_replace('"','', $_POST["rname"]);
+		$_POST["rname"]=str_replace('%','', $_POST["rname"]);
+		$_POST["rname"]=str_replace('`','', $_POST["rname"]);
+		$_POST["rname"]=str_replace("'","", $_POST["rname"]);
 		
-	    // update tag
+		$_POST["description"]=str_replace('"','', $_POST["description"]);
+		$_POST["description"]=str_replace('%','', $_POST["description"]);
+		$_POST["description"]=str_replace('`','', $_POST["description"]);
+		$_POST["description"]=str_replace("'","", $_POST["description"]);
+
+		
+		$query="insert into recipes(uid, rtitle, serv_num, rdescription, postdatetime, pic, picii, piciii) 
+				values('".$_POST["uid"]."','".$_POST["rname"]."','".$_POST["serving"]."',
+				'".$_POST["description"]."', now(),'".$content."','".$content2."','".$content3."')";  
+		if($result=do_query($_SESSION["link"], $query)){
+			echo "<script>alert('successful！');</script>";
+		} else {
+			echo "<script>alert('fail！');</script>";
+		}
+		
+		// get rid
+		$pre_query="select rid from recipes where rtitle='".$_POST["rname"]."'";
+		$r=do_query($_SESSION["link"], $pre_query);
+		$row=mysqli_fetch_array($r);
+		
+		// update tag
 		for($count=1;$count<8;$count++){
 			if(isset($_POST["tag".$count])){
 				$query="insert into hastags(rid, tid) 
-						values('".$rid."','".$_POST["tag".$count]."')";
+						values('".$row["rid"]."','".$_POST["tag".$count]."')"; 		
+				// print_r($query);
 				do_query($_SESSION["link"], $query);	
 				// update related recipes
-				$f_query="select rid from hastags where rid<>".$rid." and tid=".$_POST["tag".$count];
+				$f_query="select rid from hastags where rid<>".$row["rid"]." and tid=".$_POST["tag".$count];
+				print_r($f_query);
 				if($result2=do_query($_SESSION["link"], $f_query)){
 					while($row2=mysqli_fetch_array($result2)){
-						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$rid."')";
+						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$row["rid"]."')";
 						print_r($s_query);
 						do_query($_SESSION["link"], $s_query);
 					}
 				}
 			}
 		}		
-		
-		// UPDATE user SET username=?, upassword=?, birthday=?, ucity=?, udescription=? WHERE uid=?"
-		$ql="update recipes set pic=".$content1.", picii=".$content2.", piciii=".$content3." where rid=".$row2["rid"];
-		// print_r($ql);
-		if(do_query($_SESSION["link"], $ql))
-			print_r("good");
-		else
-			print_r("bad");
 		
 	    // update ingredient
 		for($i=1;$i<=$_POST["numRows"];$i++){

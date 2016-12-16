@@ -1,7 +1,7 @@
 <?php
 	include 'function.php';
 	$rid=$_GET["rid"];
-	$q="select rid, pic from recipes where rid=".$rid;
+	$q="select rid, pic, picii, piciii from recipes where rid=".$rid;
 	$r=do_query($_SESSION["link"], $q);
 	$row = mysqli_fetch_array($r);
 	$rid=$row["rid"];
@@ -14,8 +14,14 @@
 	for($i=2;$i<7;$i++){		
 		if($i==2){ 	// tag
 			echo '<div class="container" style="width:600px;">
-			<div><img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px"></div><table class="table table-hover">';
-			echo '<thead><th></th></thead><tbody>
+					<div>';
+			if($row["pic"])
+				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
+			if($row["picii"])
+				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
+			if($row["piciii"])
+				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
+			echo '</div><table class="table table-hover"><thead><th></th></thead><tbody>
 			<tr>';
 		}
 		if($i==3){	// related recipes
