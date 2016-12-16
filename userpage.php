@@ -51,7 +51,7 @@ function foo(){
 	include 'function.php';
 	echo'<div class="container" style="width:900px">
 		<ul class="nav nav-tabs">
-			<li class="active"><a data-toggle="tab" href="#rsvp">My RSVP</a></li>
+			<li class="active"><a data-toggle="tab" href="#RSVP">My RSVP</a></li>
 			<li><a data-toggle="tab" href="#Event">My Event</a></li>
 			<li><a data-toggle="tab" href="#Profile">My Profile</a></li>
 			<li><a data-toggle="tab" href="#Recipe">My Recipe</a></li>
@@ -61,8 +61,33 @@ function foo(){
 	    </ul>
 	    <div class="tab-content">';
 	
+	// RSVP
+	echo '<div id="RSVP" class="tab-pane fade in active">';
+	$query = "SELECT eid, ename, edescription, edatetime, gname 
+				from groups natural join event natural join rsvp natural join user
+				where email='".$_SESSION['email']."'";
+	if($result=do_query($_SESSION["link"], $query)){
+		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
+			<th></th><th>eid</th><th>event name</th><th>description</th><th>event time</th><th>group</th><th>edit</th>
+			</tr></thead><tbody>';
+		while($row = mysqli_fetch_array($result)){
+		
+			echo '<tr><td><a href="event.php?eid='.$row[0].'">Detail</a></td>';
+			
+			for ($x = 0; $x <count($row)/2; $x++) {
+				
+				echo "<td>".$row[$x]."</td>";
+				
+			}
+			$eid = "".$row[0]."";
+			echo '<td><a href="update.php?searchtype=delete_rsvp&eid='.$eid.'" class="btn btn-danger" role="button">Quit</a></td>';
+			echo "</tr>";
+		}
+		echo "</tbody></table></div></div>";
+	}
+	
 	// event infomation
-	echo	'<div id="Event" class="tab-pane fade in active">';
+	echo	'<div id="Event" class="tab-pane fade">';
 	$query = "SELECT eid, ename, edescription, edatetime, gname from groups natural join event join user on user.uid=event.creator_id
 				where email='".$_SESSION['email']."'";
 	if($result=do_query($_SESSION["link"], $query)){
@@ -112,8 +137,8 @@ function foo(){
 			
 	echo	'</select></div>
 			<div class="form-group">
-			<label for="Schedule">Event schedule:</label>
-			<input type="DateTime-local" min="2016-11-30T00:00" class="form-control" required="required" name="schedule">
+				<label for="Schedule">Event schedule:</label>
+				<input type="DateTime-local" min="2016-11-30T00:00" class="form-control" required="required" name="schedule">
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>
 			</form>
@@ -235,7 +260,8 @@ function foo(){
 			<table id="ingre"><tbody><tr>
 			<td><input id="in" type="text" class="form-control"required="required" name="ingredient1" placeholder="Ingredient..."></td>
 			<td><input id="in" type="number" class="form-control"required="required" name="quantities1" placeholder="Quantities..."></td>
-			<td><select id="in2" name="unit1"><option>gram</option><option>pcs</option><option>mililiter</option></select></td></tr></tbody></table>
+			<td><select id="in2" name="unit1"><option>gram</option><option>pcs</option><option>mililiter</option></select></td></tr>
+			</tbody></table>
 			 <p class="btn btn-info pull-right" onclick="addRow()">add</p>
 			 </div>
 			<div class="form-group">
@@ -348,32 +374,6 @@ function foo(){
 		  </div>
 		</div>';
 	
-	// RSVP
-	echo '<div id="rsvp" class="tab-pane fade">';
-	$query = "SELECT eid, ename, edescription, edatetime, gname 
-				from groups natural join event natural join rsvp natural join user
-				where email='".$_SESSION['email']."'";
-	if($result=do_query($_SESSION["link"], $query)){
-		echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
-			<th></th><th>eid</th><th>event name</th><th>description</th><th>event time</th><th>group</th><th>edit</th>
-			</tr></thead><tbody>';
-		while($row = mysqli_fetch_array($result)){
-		
-			echo '<tr><td><a href="event.php?eid='.$row[0].'">Detail</a></td>';
-			
-			for ($x = 0; $x <count($row)/2; $x++) {
-				
-				echo "<td>".$row[$x]."</td>";
-				
-			}
-			$eid = "".$row[0]."";
-			echo '<td><a href="update.php?searchtype=delete_rsvp&eid='.$eid.'" class="btn btn-danger" role="button">Quit</a></td>';
-			echo "</tr>";
-		}
-		echo "</tbody></table></div></div>";
-	}
-	
-	
 	
 	// comment
 	echo '<div id="comment" class="tab-pane fade">';	
@@ -381,22 +381,20 @@ function foo(){
 		where uid='".$_SESSION['uid']."'";
 	if($result=do_query($_SESSION["link"], $query)){
 	echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
-			<th>comment id</th><th>recipe id</th><th>rating</th><th>comment title</th><th>text</th><th>suggestions</th>
-			<th></th></thead><tbody>';
+			<th></th><th>Comment id</th><th>Recipe id</th><th>Rating</th><th>Comment Title</th><th>Text</th><th>Suggestions</th>
+			<th>Delete</th></thead><tbody>';
 		while($row = mysqli_fetch_array($result)){
 			
-			echo '<tr>';
+			echo '<tr><td><a href="recipe.php?rid='.$row["rid"].'">Detail</a></td>';
 			
 			for ($x = 0; $x <count($row)/2; $x++) {
 				
 				echo "<td>".$row[$x]."</td>";
 				
 			}
-			// $Event_eid = "".$row["eid"]."";
-			// echo '<td><a href="update.php?searchtype=delete_event&eid='.$Event_eid.'" class="btn btn-danger" role="button">Cancel</a></td>';
-			echo '<td><a href="recipe.php?rid='.$row["rid"].'">Detail</a></td></tr>';
+			echo '<td><a href="update.php?searchtype=delete_review&reviewid='.$row["reviewid"].'" class="btn btn-danger" role="button">delete</a></td></tr>';
 		}
-		echo "</tbody></table></div></div>";
+		echo "</tbody></table></div>";
 	} else{
 		// echo "<p>You have not created event!</p>";
 	}
@@ -407,7 +405,7 @@ function foo(){
 			where writerid='".$_SESSION['uid']."'";
 	if($result=do_query($_SESSION["link"], $query)){
 	echo '<div class="container" style="width:900px;"><table class="table table-hover"><thead><tr>
-			<th>report id</th><th>report title</th><th>content</th><th></th>
+			<th>Report id</th><th>Report title</th><th>Content</th><th>Edit</th>
 			</tr></thead><tbody>';
 		while($row = mysqli_fetch_array($result)){
 			
@@ -417,12 +415,12 @@ function foo(){
 				
 				echo "<td>".$row[$x]."</td>";
 				
-			}
-			echo '<td><a href="update.php?searchtype="a" class="btn btn-danger" role="button">edit</a></td>';
-			echo "</tr>";
+			}			
+			echo '<td><a href="update.php?searchtype=delete_report&reportid='.$row["reportid"].'" class="btn btn-danger" role="button">delete</a></td></tr>';
 		}
-		echo "</tbody></table></div></div>";
+		echo "</tbody></table></div>";
 	} else{
 		// echo "<p>You have not created event!</p>";
 	}
+	echo '</div></div>';
 ?>

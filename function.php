@@ -42,12 +42,18 @@
 	  width: auto;
 	}
 	#Summary {
-		
+		background: rgba(0,0,0,.55);
+		background-image:url(b.jpg);
+		border-radius: 4px;
+		color:white;
+		width:900px;
+		padding: 15px 30px 20px;
 		text-align: center;
 		margin-top:50px;
 		margin-bottom: 50px;
 	}
-	#searchdropdown {
+	#searchtype {
+		color:black;
 		width:70px;
 		height:48px;
 		border-radius: 5px;
@@ -117,16 +123,17 @@
 		</div>
 	</div>
 		
-	<div class="container">
-
-				<div class="row" id="Summary">
+	<div class="container"  id="Summary">
+			<section class="panel--search__type">
+				
+				<div class="row panel--search__wrap">
 
 					<h1>Why Our Site Is Awesome</h1>
 					<p class="lead">Search our collection of over 10,000 recipes</p>
 
 					<form action="searchresult.php" method="get" class="navbar-search">
-						<input type="text" id="search" name="keyword" required="required" class="search-query" placeholder="Search for...">
-						<select name="searchtype" id="searchdropdown">
+						<input type="text" id="search" name="keyword" class="search-query" placeholder="Search for...">
+						<select name="searchtype" id="searchtype">
 							<option value ="Recipe">Recipe</option>
 							<option value="User">User</option>
 							<option value ="Group">Group</option>
@@ -135,6 +142,7 @@
 						<button type="submit" class="btn btn-info btn-lg">Search</button>
 					</form> 
 				</div>
+			</section>
 			</div>
 			<footer id="f">
 				<p class="pull-right"><a href="#">Back to top</a></p>

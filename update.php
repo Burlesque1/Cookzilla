@@ -1,18 +1,20 @@
 <?php
 	include 'function.php';
-	print_r($_POST);
 	$_SESSION["link"] = mysqli_connect("localhost", "test", "", "cookzilla"); 
-	
+
 	//edit user
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="user"){  
-		if($stmt = $_SESSION["link"]->prepare("UPDATE user SET username=?, birthday=?, ucity=?, udescription=? WHERE uid=?")) {
-			$stmt->bind_param("ssssi", $_POST["username"], $_POST["birthday"], $_POST["city"], $_POST["description"], $_SESSION["uid"]);
-			$stmt->execute();
-			$stmt->close();
-			echo "update user table successfully";
-		}
-		else {
-		    echo "Update user table false";
+		$password = $_POST["psw"];  
+		$confirm_psw = $_POST["psw2"]; 
+		if($password == $confirm_psw) {  
+			if($stmt = $_SESSION["link"]->prepare("UPDATE user SET username=?, upassword=?, birthday=?, ucity=?, udescription=? WHERE uid=?")) {
+				$stmt->bind_param("sssssi", $_POST["username"], $password, $_POST["birthday"], $_POST["city"], $_POST["description"], $_SESSION["uid"]);
+				$stmt->execute();
+				$stmt->close();
+				echo "<script>alert('successful！');history.go(-1);</script>";
+			}
+		} else {
+			echo "<script>alert('Please make sure your password match！');history.go(-1);</script>";  
 		}
 	}
 	
@@ -31,64 +33,40 @@
 			$stmt->bind_param("isisb", $_POST["uid"], $_POST["rname"], $_POST["serving"], $_POST["description"], $content);
 			$stmt->execute();
 			$stmt->close();
-			echo "New record has been inserted into recipes table successfully";
-	    } else {
-	    	echo "Insert into recipes table false";
-	    }
-	    //get rid;
-	    if($stmt = $_SESSION["link"]->prepare("select rid from recipes  where rtitle=?")) {
-			$stmt->bind_param("s", $_POST["rname"]);
-			$stmt->execute();
-	        $stmt->bind_result($rid);
-	        $stmt->fetch();
-	        $stmt->close();
-	        echo "Select rid from recipes successfully";
-	    } else {
-	    	echo "Select rid from recipes false";
-	    }
+		    //get rid;
+		    if($stmt = $_SESSION["link"]->prepare("select rid from recipes  where rtitle=?")) {
+				$stmt->bind_param("s", $_POST["rname"]);
+				$stmt->execute();
+		        $stmt->bind_result($rid);
+		        $stmt->fetch();
+		        $stmt->close();
+	        }
+	    } 
 
 	    // update tag
 		for($count=1;$count<8;$count++){
 			if(isset($_POST["tag".$count])){
-				if($stmt = $_SESSION["link"]->prepare("INSERT INTO hastags (rid, tid) VALUES (?, ?)")) {
-					$stmt->bind_param("ii", $rid, $_POST["tag".$count]);
-					$stmt->execute();
-					$stmt->close();
-			    } else {
-			    	echo "Insert into recipes table false";
-			    }
+				$query="insert into hastags(rid, tid) 
+						values('".$rid."','".$_POST["tag".$count]."')";
+				do_query($_SESSION["link"], $query);	
 				// update related recipes
-			    if($stmt = $_SESSION["link"]->prepare("select rid from hastags where rid<>? and tid=?")) {
-			    	$stmt->bind_param("ii", $rid, $_POST["tag".$count]);
-					$stmt->execute();
-					$stmt->bind_result($rid2);
-	        		while($stmt->fetch()) {
-	        			if($stmt2 = $_SESSION["link"]->prepare("INSERT INTO link (rid1, rid2) VALUES (?, ?)")) {
-							$stmt2->bind_param("ii", $rid2, $rid);
-							$stmt2->execute();
-							$stmt2->close();
-						}
-	        		}
-					$stmt->close();
+				$f_query="select rid from hastags where rid<>".$rid." and tid=".$_POST["tag".$count];
+				if($result2=do_query($_SESSION["link"], $f_query)){
+					while($row2=mysqli_fetch_array($result2)){
+						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$rid."')";
+						print_r($s_query);
+						do_query($_SESSION["link"], $s_query);
+					}
 				}
 			}
-		}
-
-	    if($stmt = $_SESSION["link"]->prepare("INSERT INTO hastags (rid, tid) VALUES (?, ?)")) {
-			$stmt->bind_param("ii", $rid, $content);
-			$stmt->execute();
-			$stmt->close();
-			echo "New record has been inserted into recipes table successfully";
-	    } else {
-	    	echo "Insert into recipes table false";
-	    }
+		}		
 	    // update ingredient
 		for($i=1;$i<=$_POST["numRows"];$i++){
 			if($stmt = $_SESSION["link"]->prepare("INSERT INTO ingredients (rid, iname, iquantities, unit) VALUES (?, ?, ?, ?)")) {
 				$stmt->bind_param("isis", $rid, $_POST["ingredient".$i], $_POST["quantities".$i], $_POST["unit".$i]);
 				$stmt->execute();
 				$stmt->close();
-				echo "Insert into ingredients successfully";
+				// echo "<script>alert('successful！');history.go(-1);</script>";
 			} else {
 				echo "Insert into ingredients false";
 			}
@@ -172,7 +150,7 @@
 			$stmt->close();
 			// get eid
 			if($stmt = $_SESSION["link"]->prepare("select eid from event where ename=?")) {
-				$stmt->bind_param("s", $gid, $_POST["ename"]);
+				$stmt->bind_param("s", $_POST["ename"]);
 				$stmt->execute();
 				$stmt->bind_result($eid);
 				$stmt->fetch();
@@ -182,6 +160,7 @@
 					$stmt->bind_param("ii", $_SESSION["uid"], $eid);
 					$stmt->execute();
 					$stmt->close();
+					echo "<script>alert('successful！');history.go(-1);</script>";
 				}
 			}
 		}
@@ -268,7 +247,7 @@
 		} else {
 			echo "<script>alert('fail！');</script>";
 		}
-		echo "<script>alert('recip has deleted!'); history.go(-1);</script>";  
+		echo "<script>alert('recipe has deleted!'); history.go(-1);</script>";  
 	}
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_group") {
 		$group_gid = $_GET['gid'];
@@ -290,9 +269,9 @@
 		} else {
 			echo "<script>alert('fail！');</script>";
 		}
-		// echo "<script>alert('log has deleted!'); history.go(-1);</script>";  
+		echo "<script>alert('log has deleted!'); history.go(-1);</script>";  
 	}
-	
+
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="rsvp") {
 		$query="insert into rsvp values('".$_SESSION["uid"]."','".$_GET["eid"]."', now())";
 		print_r($query);
@@ -301,6 +280,30 @@
 		} else {
 			echo "<script>alert('fail！');</script>";
 		}
+	}
+
+	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_review") {
+		$reviewid = $_GET['reviewid'];
+		$query="DELETE FROM review WHERE reviewid=$reviewid";
+		// print_r($query);
+		if($result=do_query($_SESSION["link"], $query)){
+			echo "<script>alert('report has deleted!'); history.go(-1);</script>";   
+		} else {
+			// echo "<script>alert('fail！');</script>";
+		}
+		
+	}
+
+	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_report") {
+		$reportid = $_GET['reportid'];
+		$query="DELETE FROM report WHERE reportid=$reportid";
+		print_r($query);
+		if($result=do_query($_SESSION["link"], $query)){
+			echo "<script>alert('report has deleted!'); history.go(-1);</script>";   
+		} else {
+			// echo "<script>alert('fail！');</script>";
+		}
+		
 	}
 	echo "<script>location.href='userpage.php';</script>";
 ?>
