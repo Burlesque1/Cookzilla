@@ -6,9 +6,9 @@
 		//insert into log
 		$logquery="insert into log(uid, logtype, logvalue, logtime) 
 		values('".$_SESSION["uid"]."','tag',".$tagname.", now())";  
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $logquery)){
-			echo "<script>alert('log successful！');</script>";
+			// echo "<script>alert('log successful！');</script>";
 		} else {
 			echo "<script>alert('insert log fail！');</script>";
 		}
@@ -44,4 +44,5 @@
 		}
 		echo "</tbody></table></div>";
 	}
+	// echo "<script>location.href='userpage.php';</script>";
 ?>

@@ -16,17 +16,28 @@
 		} else {
 			echo "<script>alert('Please make sure your password match！');history.go(-1);</script>";  
 		}
+		$_SESSION["username"]=$_POST["username"];
 	}
 	
 	//my recipe
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="recipe"){
+		$_POST["rname"]=str_replace('"','', $_POST["rname"]);
+		$_POST["rname"]=str_replace('%','', $_POST["rname"]);
+		$_POST["rname"]=str_replace('`','', $_POST["rname"]);
+		$_POST["rname"]=str_replace("'","", $_POST["rname"]);
+		
+		$_POST["description"]=str_replace('"','', $_POST["description"]);
+		$_POST["description"]=str_replace('%','', $_POST["description"]);
+		$_POST["description"]=str_replace('`','', $_POST["description"]);
+		$_POST["description"]=str_replace("'","", $_POST["description"]);
+
 		$content2=null;
 		if(isset($_FILES["fileToUpload2"]["tmp_name"]) && $_FILES["fileToUpload2"]["tmp_name"]){
-			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
-			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
-			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
+			$img2=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
+			$fp2=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
+			$content2=fread($fp2, filesize($_FILES["fileToUpload2"]["tmp_name"]));
 			$content2=addslashes($content2);
-			fclose($fp);
+			fclose($fp2);
 			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($content2).'" width="100px"></p>';
 		}
 		$content=null;
@@ -40,24 +51,13 @@
 		}
 		$content3=null;
 		if(isset($_FILES["fileToUpload3"]["tmp_name"]) && $_FILES["fileToUpload3"]["tmp_name"]){
-			$img=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
-			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
-			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
+			$img3=mysqli_real_escape_string($_SESSION["link"], file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
+			$fp3=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
+			$content3=fread($fp3, filesize($_FILES["fileToUpload3"]["tmp_name"]));
 			$content3=addslashes($content3);
-			fclose($fp);
+			fclose($fp3);
 			// echo '<p><img src="data:image/jpg;base64,'.base64_encode($content3).'" width="100px"></p>';
 		}
-		
-		$_POST["rname"]=str_replace('"','', $_POST["rname"]);
-		$_POST["rname"]=str_replace('%','', $_POST["rname"]);
-		$_POST["rname"]=str_replace('`','', $_POST["rname"]);
-		$_POST["rname"]=str_replace("'","", $_POST["rname"]);
-		
-		$_POST["description"]=str_replace('"','', $_POST["description"]);
-		$_POST["description"]=str_replace('%','', $_POST["description"]);
-		$_POST["description"]=str_replace('`','', $_POST["description"]);
-		$_POST["description"]=str_replace("'","", $_POST["description"]);
-
 		
 		$query="insert into recipes(uid, rtitle, serv_num, rdescription, postdatetime, pic, picii, piciii) 
 				values('".$_POST["uid"]."','".$_POST["rname"]."','".$_POST["serving"]."',
@@ -82,12 +82,14 @@
 				do_query($_SESSION["link"], $query);	
 				// update related recipes
 				$f_query="select rid from hastags where rid<>".$row["rid"]." and tid=".$_POST["tag".$count];
-				print_r($f_query);
+				// print_r($f_query);
 				if($result2=do_query($_SESSION["link"], $f_query)){
 					while($row2=mysqli_fetch_array($result2)){
 						$s_query="insert into link(rid1, rid2) value('".$row2["rid"]."','".$row["rid"]."')";
-						print_r($s_query);
-						do_query($_SESSION["link"], $s_query);
+						// print_r($s_query);
+						if(do_query($_SESSION["link"], $s_query)){
+							// echo "<script>alert('Insert link successful！');</script>";
+						}
 					}
 				}
 			}
@@ -108,21 +110,25 @@
 	
 	// add comment
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="addreview"){
-		print_r($_FILES);
+		// print_r($_FILES);
 		$content=null;
 		$content2=null;
 		$content3=null;		
-		if($_FILES["fileToUpload1"]["tmp_name"] || $_FILES["fileToUpload2"]["tmp_name"] || $_FILES["fileToUpload3"]["tmp_name"]){
+		if($_FILES["fileToUpload1"]["tmp_name"]){
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
 			$content=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
 			$content=addslashes($content);
 			fclose($fp);
+		}
+		 if($_FILES["fileToUpload2"]["tmp_name"]){
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
 			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
 			$content2=addslashes($content);
 			fclose($fp);
+		 }
+		if($_FILES["fileToUpload3"]["tmp_name"]){
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
@@ -202,7 +208,7 @@
 	if(isset($_POST["searchtype"]) && $_POST["searchtype"]=="event_report"){
 		// 1
 		if($_FILES["fileToUpload1"]["tmp_name"]!=null) {
-			print_r($_FILES);
+			// print_r($_FILES);
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload1"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload1"]["tmp_name"],'r');
 			$content1=fread($fp, filesize($_FILES["fileToUpload1"]["tmp_name"]));
@@ -214,7 +220,7 @@
 		}
 		// 2
 		if($_FILES["fileToUpload2"]["tmp_name"]!=null) {
-			print_r($_FILES);
+			// print_r($_FILES);
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload2"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload2"]["tmp_name"],'r');
 			$content2=fread($fp, filesize($_FILES["fileToUpload2"]["tmp_name"]));
@@ -226,7 +232,7 @@
 		}
 		// 3
 		if($_FILES["fileToUpload3"]["tmp_name"]!=null) {
-			print_r($_FILES);
+			// print_r($_FILES);
 			$img=mysqli_real_escape_string($_SESSION["link"],file_get_contents($_FILES["fileToUpload3"]["tmp_name"]));
 			$fp=fopen($_FILES["fileToUpload3"]["tmp_name"],'r');
 			$content3=fread($fp, filesize($_FILES["fileToUpload3"]["tmp_name"]));
@@ -263,7 +269,7 @@
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_event") {
 		$Event_eid = $_GET['eid'];
 		$query="DELETE FROM event WHERE eid=$Event_eid";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('successful！');</script>";
 		} else {
@@ -274,7 +280,7 @@
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_recipe") {
 		$Recipe_rid = $_GET['rid'];
 		$query="DELETE FROM recipes WHERE rid=$Recipe_rid";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('successful！');</script>";
 		} else {
@@ -285,7 +291,7 @@
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_group") {
 		$group_gid = $_GET['gid'];
 		$query="DELETE FROM groups WHERE rid=$group_gid";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('successful！');</script>";
 		} else {
@@ -296,7 +302,7 @@
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_log") {
 		$logid = $_GET['logid'];
 		$query="DELETE FROM log WHERE logid=$logid";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('successful！');</script>";
 		} else {
@@ -304,10 +310,15 @@
 		}
 		echo "<script>alert('log has deleted!'); history.go(-1);</script>";  
 	}
-
+	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="joingroup") {
+		$query="insert into joins values('".$_GET["gid"]."','".$_SESSION["uid"]."')";
+		if(do_query($_SESSION["link"], $query)){
+			echo "<script>alert('join successful！');</script>";
+		}
+	}
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="rsvp") {
 		$query="insert into rsvp values('".$_SESSION["uid"]."','".$_GET["eid"]."', now())";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('successful！');</script>";
 		} else {
@@ -330,7 +341,7 @@
 	if(isset($_GET["searchtype"]) && $_GET["searchtype"]=="delete_report") {
 		$reportid = $_GET['reportid'];
 		$query="DELETE FROM report WHERE reportid=$reportid";
-		print_r($query);
+		// print_r($query);
 		if($result=do_query($_SESSION["link"], $query)){
 			echo "<script>alert('report has deleted!'); history.go(-1);</script>";   
 		} else {

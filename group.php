@@ -41,4 +41,8 @@
 		echo "</tbody></table></div>";
 		
 	}
+	
+	echo '<div class="container" style="width:900px;">
+	<a class="btn btn-danger" href="update.php?searchtype=joingroup&gid='.$gid.'">Join us</a>
+	</div>';
 ?>

@@ -18,13 +18,14 @@
 			if($row["pic"])
 				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
 			if($row["picii"])
-				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
+				echo '<img src="data:image/jpg;base64,'.base64_encode($row["picii"]).'" width="500px">';
 			if($row["piciii"])
-				echo '<img src="data:image/jpg;base64,'.base64_encode($row["pic"]).'" width="500px">';
+				echo '<img src="data:image/jpg;base64,'.base64_encode($row["piciii"]).'" width="500px">';
 			echo '</div><table class="table table-hover"><thead><th></th></thead><tbody>
 			<tr>';
 		}
 		if($i==3){	// related recipes
+			// print_r($query_set[3]);
 			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
 			echo '<thead><label>Related Recipes:</label><th></th><th>rid</th><th>title</th></thead><tbody>';
 		}
@@ -40,7 +41,7 @@
 		if($i==6){	// comments
 			echo '<div class="container" style="width:900px;"><table class="table table-hover">';
 			echo '<thead><label>Comments:</label><th>comment id</th><th>rating</th><th>title</th><th>text</th>
-				<th>suggestion</th><th>Reviewer</th><th>pic1</th><th>pic2</th><th>pic3</th></thead><tbody>';
+				<th>suggestion</th><th>Reviewer</th></thead><tbody>';
 		}
 		if(!$result=do_query($_SESSION["link"], $query_set[$i])){
 			echo "<p>no result found!</p>";
@@ -87,17 +88,15 @@
 	echo "</div></div>";
 	//insert into log
 	if(isset($_SESSION["check"]) && $_SESSION["check"]=="successful"){
-		//insert into log
+		//insert into logs
 		$query='SELECT rtitle from recipes where rid="'.$rid.'";';
 		if($result=do_query($_SESSION["link"], $query)){
 			$rtitle = mysqli_fetch_array($result)[0];
-			$query="insert into log(uid, logtype, logvalue, logtime) 
-			values('".$_SESSION["uid"]."','recipe','".$rtitle."', now())";  
-			// print_r($query);
-			if($result=do_query($_SESSION["link"], $query)){
-				// echo "<script>alert('successful！');</script>";
-			} else {
-				echo "<script>alert('fail！');</script>";
+			if($stmt = $_SESSION["link"]->prepare("INSERT INTO log (uid, logtype, logvalue, logtime) VALUES (?, ?, ?, now())")) {
+				$recipe = 'recipe';
+				$stmt->bind_param("iss", $_SESSION["uid"], $recipe, $rtitle);
+				$stmt->execute();
+				$stmt->close();
 			}
 		} else {
 			echo "<script>alert('fail！');</script>";
@@ -125,12 +124,7 @@
 						<option value=1>1</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<label for="fileToUpload">Image(.jpeg, .png):</label>
-					<input type="file" name="fileToUpload1" id="fileToUpload" placeholder=".jpeg, .png">
-					<input type="file" name="fileToUpload2" id="fileToUpload" placeholder=".jpeg, .png">
-					<input type="file" name="fileToUpload3" id="fileToUpload" placeholder=".jpeg, .png">
-				</div>
+				
 				<button type="submit" class="btn btn-default">Submit</button>
 				</div>
 			</form>';
